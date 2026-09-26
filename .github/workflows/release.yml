@@ -1,0 +1,25 @@
+# Rebuilds yuntona.ai when a specification version is tagged.
+# The site fetches every tagged release at build time; this only triggers the build.
+name: Publish release to site
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions: {}
+
+jobs:
+  trigger-site-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Netlify build hook
+        env:
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -z "$NETLIFY_BUILD_HOOK" ]; then
+            echo "::error::NETLIFY_BUILD_HOOK secret is not set; the site was not rebuilt."
+            exit 1
+          fi
+          curl --fail --silent --show-error -X POST \
+            -d "{}" "$NETLIFY_BUILD_HOOK?trigger_title=yuntona-spec+${GITHUB_REF_NAME}"
