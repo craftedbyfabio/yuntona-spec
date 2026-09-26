@@ -49,7 +49,7 @@ own licence. This specification refers to their entries; it does not redefine th
 
 ## Licence
 
-Copyright © 2026 Fabio Baumeler.
+Copyright © 2026 Yuntona Ltd.
 
 Licensed under the [Creative Commons Attribution-ShareAlike 4.0 International
 licence](LICENSE) (CC BY-SA 4.0). You may share and adapt it, including commercially, provided you
