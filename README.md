@@ -4,17 +4,23 @@ Open, versioned specifications for grading the evidence behind AI security claim
 
 | Specification | Version | Status |
 | --- | --- | --- |
-| [Evidence-Graded Risk Mapping](evidence-graded-risk-mapping.md) | 0.1 | Draft |
+| [Evidence-Graded Risk Mapping](evidence-graded-risk-mapping.md) | 0.2 | Draft |
+| [Signal register](signal-register.md) | 1 | Draft |
 
-**Evidence-Graded Risk Mapping** maps graded evidence to the AI security risks it claims to
-mitigate. It grades evidence on a four-class ladder, from bare assertion to currently verified,
-and checks it against the OWASP LLM Top 10 (2026) and the OWASP Agentic (ASI) Top 10 (2026).
+**Evidence-Graded Risk Mapping** names what a tool's evidence shows against a named AI security
+risk. It grades claims on four rungs (Claimed, On-signal, Self-measured, Externally measured)
+against one registered mechanism per risk, for the OWASP Top 10 for LLM Applications 2026 and the
+OWASP Top 10 for Agentic Applications 2026. It grades claims; it does not measure protection.
+
+The **signal register** names that mechanism for each of the twenty entries, cited to OWASP's own
+numbered mitigation guidance. It is versioned separately, so adding a signal does not change the
+specification.
 
 ## Status
 
-Version 0.1 is a draft, published before any results. No tool has been mapped against a named
-risk under it yet, no gold labels exist, and no calibration has been fitted. Where the text refers
-to something that does not exist yet, such as the certification allowlist, it says so.
+Version 0.2 is a draft, published before any results. No tool has been graded against a named
+risk under it yet. Version 0.1 remains available at its tag; [`CHANGELOG.md`](CHANGELOG.md) explains
+what changed and why.
 
 ## Versions
 
@@ -26,15 +32,20 @@ to something that does not exist yet, such as the certification allowlist, it sa
 
 ## Citing
 
-> Yuntona, *Evidence-Graded Risk Mapping*, version 0.1. https://yuntona.ai
+> Yuntona, *Evidence-Graded Risk Mapping*, version 0.2. https://yuntona.ai
 
 Always cite a version. The specification changes between versions, and a citation without one
-cannot be checked against the text it refers to.
+cannot be checked against the text it refers to. When citing a grade, cite the signal register
+version too.
 
 ## Corrections and contributions
 
 Corrections are the fastest way to improve this specification. If something is wrong, open an
 issue and cite the text you are disputing. Pull requests are welcome too.
+
+To propose a second primary signal for a risk entry, open an issue citing the numbered OWASP
+guideline in that entry that it comes from (specification §3). Declined proposals keep their
+reason on the issue.
 
 By contributing, you agree that your contribution is licensed under CC BY-SA 4.0, the same
 licence as the rest of the specification.
