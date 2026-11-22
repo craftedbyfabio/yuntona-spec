@@ -5,7 +5,7 @@ status: draft
 revised: 2026-10
 licence: CC-BY-SA-4.0
 taxonomies:
-  - "OWASP Top 10 for LLM Applications 2026 (Version 2026)"
+  - "OWASP Top 10 for LLM Applications 2026 (Version 2026, published 4 August 2026)"
   - "OWASP Top 10 for Agentic Applications 2026 (Version 2026, December 2025)"
 register: signal-register.md
 summary: An open, versioned specification for grading what a tool's evidence shows against a named AI security risk.
@@ -29,7 +29,7 @@ It grades claims. It does not measure protection. Whether a tool actually stops 
 4. [Certification is recorded, not graded](#4-certification-is-recorded-not-graded)
 5. [Review](#5-review)
 6. [The invisible failure](#6-the-invisible-failure)
-7. [Nothing expires by default](#7-nothing-expires-by-default)
+7. [Freshness](#7-freshness)
 8. [Entity resolution](#8-entity-resolution)
 9. [Taxonomy and register versioning](#9-taxonomy-and-register-versioning)
 10. [Review discipline](#10-review-discipline)
@@ -55,12 +55,14 @@ Where a standards body publishes its own risk-to-risk crosswalks, those are cite
 
 Every mapping (a tool, set against one named risk) carries a rung, published with it. The rung names what the evidence shows about the mechanism registered for that risk (§3). Asking only whether source text supports a mapping collapses into "is there a quote," and that launders vendor marketing into a verdict.
 
-| Rung | What the evidence shows |
-| --- | --- |
-| **Claimed** | The vendor says the tool addresses the risk, but the quoted evidence does not describe the risk's registered primary signal. |
-| **On-signal** | The quoted evidence describes the registered primary signal, not only a shared line. |
-| **Self-measured** | The vendor publishes a measurement of that signal, with the corpus, the operating point and the outcome attached. |
-| **Externally measured** | A party other than the vendor ran a test of that signal and published it readably enough to identify the corpus, operating point, outcome and product version. |
+| Rung | Shown to readers as | What the evidence shows |
+| --- | --- | --- |
+| **Claimed** | claimed only | The vendor says the tool addresses the risk, but the quoted evidence does not describe the risk's registered primary signal. |
+| **On-signal** | explained by vendor | The quoted evidence describes the registered primary signal, not only a shared line. |
+| **Self-measured** | tested by vendor | The vendor publishes a measurement of that signal, with the corpus, the operating point and the outcome attached. |
+| **Externally measured** | tested independently | A party other than the vendor ran a test of that signal and published it readably enough to identify the corpus, operating point, outcome and product version. |
+
+The rung names are the specification's terms. Published views use the plain labels in the second column, one per rung, so no two rungs ever share a label.
 
 The examples below are illustrative and describe no real product.
 
@@ -81,13 +83,19 @@ A number missing any of these is refused, and the row stays at On-signal. A test
 
 **Externally measured.** Run by a party with no commercial relationship with the vendor for that test, against a named product and version, with the four items above readable from what was published.
 
-Where the signal register sets a **measurement condition** for an entry, it binds both rungs. For example, LLM01:2026 directs readers to "reject static-only attack-success claims," so a prompt-injection number from a static attack set only stays On-signal and is marked *static-only*.
+Where the signal register sets a **measurement condition** for an entry, it is shown as a mark on the rung; it does not lower the rung. For example, LLM01:2026 directs readers to "reject static-only attack-success claims." A prompt-injection number measured on a fixed attack set keeps its rung and is marked *fixed attacks only*, so readers can see it says nothing about adaptive attackers. Capping such numbers instead would put almost every published result in the same place as vendors who publish nothing.
 
 ### Rechecked is a modifier, not a rung
 
 **Externally measured, rechecked** means the same method was run again by a party other than the vendor, within 12 months of the previous run, against the product version current at the time. "The same method" means the same corpus, identified by hash or published version, at the same operating point.
 
 A vendor rerunning its own test stays Self-measured, however often it reruns. A fresh independent test never ranks below a second self-test. The recheck series is shown, not just the latest date (§7).
+
+### Code-confirmed is a modifier, not a rung
+
+For an open-source tool, an On-signal row can carry **code-confirmed at version X** when the mechanism the quote describes was found in the cited code at a named release. The record keeps the release, the file path and line range, and a hash of each cited file. If a cited file changes in a later release, the row returns to review (§7).
+
+Code-confirmed does not raise the rung. Code shows that a mechanism exists, not that it stops attacks. It applies only to the edition whose code was read: open-source code says nothing about a hosted or enterprise edition that is not published.
 
 ### Where a quote lands
 
@@ -125,11 +133,11 @@ OWASP's mitigation guidance repeats a handful of controls across nearly every en
 
 So each risk entry carries a **primary signal**: the one mechanism, chosen from that entry's own published guidance and cited to it by number, that a quote must describe to reach On-signal. The signals live in a separate, versioned file, the [signal register](signal-register.md). This section states the rules the register follows.
 
-1. **One primary signal per entry, cited.** Each signal cites the numbered guideline(s) in the entry it comes from. A signal with no citation is not registered.
+1. **One primary signal per entry, cited.** A second can be added through the proposal path below. Each signal cites the numbered guideline(s) in the entry it comes from. A signal with no citation is not registered.
 2. **A decision, not a record.** The signal is something that blocks, rejects, excludes, pauses or gates. Detection that only records or alerts does not qualify, because it does not mitigate on its own.
 3. **Closed against shared lines.** The register lists the shared lines. A quote that states only a shared line never reaches On-signal for any entry. Where a signal names a *specific form* of a shared line (sandboxed execution of agent-generated code for ASI05, enforced spending caps for LLM06), the quote must describe that specific form.
 4. **Boundaries in OWASP's words.** Each entry records where OWASP draws its edge against neighbouring entries, quoted, next to the signal. A mapping on the wrong side is re-proposed against the right entry, not rejected (§10).
-5. **Measurement conditions where OWASP sets them.** If an entry's own text sets a condition on what counts as a test, the register records it and it binds rungs 3 and 4.
+5. **Measurement conditions where OWASP sets them.** If an entry's own text sets a condition on what counts as a test, the register records it, and a measurement that does not meet it carries a mark on its rung (§2).
 
 ### Worked example: ASI06 Memory & Context Poisoning
 
@@ -149,7 +157,7 @@ One signal per entry deliberately shuts out other mechanisms, and without a way 
 
 An open-ended "any reasonable control" clause is not offered. It would let the logging sentence back in.
 
-The register's first edition carries one pending proposal as the example: quarantine, expiry or decay of unverified memory for ASI06 (PM7, PM8), for a tool that never scans the write but stops serving entries that have not been verified.
+The register's first edition already has one entry with two primary signals. ASI06 accepts either a decision on the write or read (above) or quarantine, expiry or decay of unverified memory (PM7, PM8), for a tool that never scans the write but stops serving entries that have not been verified. It was added before any row was graded, so nothing had to be requeued. A later addition of the same kind would follow the path above.
 
 ### The same evidence can carry the opposite sign
 
@@ -164,7 +172,10 @@ Evidence is graded per risk entry, including its direction. Comprehensive prompt
 
 A certification such as AIUC-1 assures that a vendor operates its *own* AI systems safely. It does not test whether the vendor's product mitigates a named risk for the buyer. Treating it as evidence on the ladder is a category error, so it has no rung.
 
-It is recorded as a separate attribute: **vendor's own system independently assured**.
+It is recorded as a separate attribute: **vendor's own system independently assured**, with one of two labels:
+
+- **checked with issuer**: the certificate was found on the issuer's own register or verification page;
+- **vendor states**: the vendor claims it, and the record links the vendor's page and the date it was read.
 
 | Field | Content |
 | --- | --- |
@@ -173,14 +184,15 @@ It is recorded as a separate attribute: **vendor's own system independently assu
 | Certificate ID | As issued |
 | Scope | The issuer's scope statement, quoted |
 | Valid from / until | Dates as issued |
-| Verification | A link to the issuer's own verification page or register |
+| Label | checked with issuer, or vendor states |
+| Verification | A link to the issuer's verification page or register, or to the vendor page that makes the claim |
 
 The rules are short:
 
-- A certificate is recorded only if it can be checked at the issuer. A badge on the vendor's own site is not enough.
+- A certificate is labelled *checked with issuer* only when the issuer's own register confirms it. Anything less is *vendor states*, never left unlabelled.
 - It lapses on its expiry date, and the lapse is shown.
 - It never changes a rung, and is never displayed adjacent to a rung, where it would read as corroboration.
-- No allowlist is needed, because the attribute grades nothing. It states a checkable fact.
+- No allowlist is needed, because the attribute grades nothing. It states a fact and says how far it was checked.
 
 ## §5 Review
 
@@ -235,7 +247,7 @@ Uniform sampling from a pile of mostly trivial negatives returns zero and means 
 
 Vendors ship features and rarely announce removals. A tool mapped to three risks in August may cover five by December, and nothing in a single-pass design ever looks again. Quote verification only checks existing mappings; it cannot propose new ones. So the never-proposed pile grows silently for tools already processed, and the sampling frame must include the unmapped pairs of already-mapped tools, not only tools with no mappings at all.
 
-## §7 Nothing expires by default
+## §7 Freshness
 
 *A freshness claim needs machinery behind it*
 
@@ -244,6 +256,12 @@ A mapping made against vendor documentation that changed four months ago is stal
 The hash is taken over the quoted span, never the whole page. Hashing the page would demote every mapping derived from it on any edit anywhere.
 
 A change to the signal register requeues rows too: see §9.
+
+### Every entry is re-assessed within 12 months
+
+Change detection only catches what it watches. So, separately, every tool's entry is re-assessed in full within 12 months of its last assessment, and straight away after a change of ownership, an acquisition or a rename. A re-assessment reviews every row for that tool, not only the ones whose quotes changed.
+
+The two triggers do different jobs. A changed quote sends one row back to review at any time; the 12-month rule and the ownership trigger catch what no single quote shows. An entry past its 12 months is shown as due for re-assessment, not as current.
 
 ### Demotion carries the wrong prior by default
 

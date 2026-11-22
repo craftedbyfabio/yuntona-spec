@@ -5,7 +5,7 @@ applies-to: Evidence-Graded Risk Mapping v0.2
 licence: CC-BY-SA-4.0
 taxonomies:
   - "OWASP Top 10 for Agentic Applications 2026 (Version 2026, December 2025)"
-  - "OWASP Top 10 for LLM Applications 2026 (Version 2026, v1.0)"
+  - "OWASP Top 10 for LLM Applications 2026 (Version 2026, published 4 August 2026)"
 ---
 
 # Signal register
@@ -22,7 +22,7 @@ This register names, for each risk entry, the one observable mechanism that evid
 - **Does not clear.** Mechanisms that are in OWASP's guidance for this entry but do not reach On-signal on their own. They are not wrong controls; they are shared, generic, or detection-only.
 - **Boundary.** Where OWASP draws the edge between this entry and its neighbours, in OWASP's terms. A mapping on the wrong side of a boundary is re-proposed against the right entry (§10), not rejected.
 - **Considered, not chosen.** Other mechanisms that were candidates, and why they lost. Any of them can be proposed as a second primary signal under §3.
-- **Measurement condition.** Where OWASP's own text sets a condition on what counts as a measurement, it binds rungs 3 and 4 for that entry.
+- **Measurement condition.** Where OWASP's own text sets a condition on what counts as a measurement, a measurement that does not meet it keeps its rung and carries a mark saying so.
 - **Polarity.** Where a category of evidence is an exposure for this entry, not a mitigation.
 
 ## Shared lines
@@ -96,7 +96,7 @@ A red-teaming product is not a mitigation for any entry. Its output can be the *
 - **Cites.** ASI06:2026 PM2 ("Scan all new memory writes and model outputs... before commit"), PM5 (source attribution), PM9 (weight retrieval by trust and tenancy).
 - **Does not clear.** Encryption and least-privilege access (PM1, SL-ENC, SL-PRIV). Generic logs. A classifier on the current turn's prompt: that is one-time input, which ASI06 excludes. Detection of "suspicious updates or frequencies" (the second half of PM5) without the ability to exclude the entry.
 - **Boundary.** ASI06 context "excludes one-time input prompts covered under LLM01:2025 Prompt Injection" (unchanged as LLM01:2026). ASI06 is "persistent corruption of agent memory and retrievable context that propagates across sessions." Direct goal manipulation is ASI01; degradation after poisoning spreads is ASI08. **Worked example:** a chat turn that is later summarised into memory is ASI06, because the harm is the later read. OWASP names this case as ASI06:2026 CE3 ("context-window manipulation").
-- **Proposed second primary (pending, §3).** Quarantine, expiry or decay of unverified memory, so an entry that has not been verified stops being served. Cites ASI06:2026 PM7 (trust scores, "decaying or expiring unverified memory," "rollback/quarantine") and PM8 ("Expire unverified memory"). This is the worked example of the proposal path: accepting it bumps the register version and requeues ASI06 rows at Claimed.
+- **Second primary signal.** Quarantine, expiry or decay of unverified memory, so an entry that has not been verified stops being served. Cites ASI06:2026 PM7 (trust scores, "decaying or expiring unverified memory," "rollback/quarantine") and PM8 ("Expire unverified memory"). A quote describing either signal reaches On-signal. Included in the first edition, before any row was graded, so nothing was requeued.
 - **Considered, not chosen.** Memory segmentation per session and domain (PM3). It stops cross-tenant bleed (ASI06:2026 Example Attack Scenario 5) but is SL-ISO in general form.
 - **Changed from v0.1.** v0.1 named "source attribution and write-frequency anomalies." Attribution stays, but only where it can exclude an entry at retrieval; frequency anomaly detection alone no longer clears.
 
@@ -140,7 +140,7 @@ A red-teaming product is not a mitigation for any entry. Its output can be the *
 
 - **Primary signal.** A decision on untrusted input at the boundary before it reaches the model: classified and blocked at every modality, stripped of smuggling characters, or carried in a structurally separate, provenance-labelled channel.
 - **Cites.** LLM01:2026 PM3, PM5, PM6.
-- **Measurement condition.** LLM01:2026 PM11: "Test against adaptive attackers who have read the deployed defense, and reject static-only attack-success claims." A measurement from a static attack set only does not reach rung 3 or 4 for this entry; the row stays On-signal and is marked *static-only*.
+- **Measurement condition.** LLM01:2026 PM11: "Test against adaptive attackers who have read the deployed defense, and reject static-only attack-success claims." A measurement from a fixed attack set keeps its rung and is marked *fixed attacks only*, so readers can see it says nothing about adaptive attackers.
 - **Does not clear.** Role constraints in the system prompt, which OWASP calls "a partial control only" (PM1). Output schema validation (PM2), which is LLM10:2026 territory. Human confirmation (PM7, SL-HITL).
 - **Read with this.** OWASP states that "no reliable prevention mechanism exists today" and that the input-side controls "are expected to degrade against adaptive attackers." The controls it calls load-bearing, least privilege and capability budgeting (PM4, PM8), belong to LLM03:2026. An On-signal LLM01 row is a narrower claim than it looks.
 - **Boundary.** Memory writes are covered here as PM9 but owned by ASI06:2026 once the model is an actor with memory (the LLM list's own boundary note: "the moment that model becomes an actor... the risk moves to the OWASP Agentic Top 10"). Output sanitisation is LLM10:2026; consequences of output reaching privileged actions are LLM03:2026.
@@ -218,6 +218,6 @@ A red-teaming product is not a mitigation for any entry. Its output can be the *
 ## Sources
 
 - OWASP GenAI Security Project, *OWASP Top 10 for Agentic Applications 2026*, Version 2026, December 2025. CC BY-SA 4.0.
-- OWASP GenAI Security Project, *OWASP Top 10 for LLM Applications 2026*, Version 2026 (v1.0 PDF). CC BY-SA 4.0.
+- OWASP GenAI Security Project, *OWASP Top 10 for LLM Applications 2026*, Version 2026, published 4 August 2026 (v1.0 PDF). DOI 10.5281/zenodo.22109015. CC BY-SA 4.0.
 
 Quoted passages are reproduced from those documents under CC BY-SA 4.0, with attribution as above. This register refers to their entries; it does not redefine them.

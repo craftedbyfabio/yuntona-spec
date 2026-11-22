@@ -33,6 +33,20 @@ mechanism per risk. Nothing was graded under v0.1, so no published grade changes
   way to admit other mechanisms that does not reopen the generic-control loophole.
 - **Rungs are never counted.** No tool-level "covers N risks" figure. *Why:* a count turns Claimed
   rows into something that reads as coverage.
+- **Plain-word labels for readers.** Each rung has one published label: claimed only, explained by
+  vendor, tested by vendor, tested independently. *Why:* readers should not need the
+  specification's terms, and no two rungs may share a label.
+- **Code-confirmed modifier** for open-source tools: the mechanism was found in the cited code at a
+  named release. It does not raise the rung. *Why:* it is real information, but code shows a
+  mechanism exists, not that it works.
+- **Measurement conditions mark a rung instead of lowering it.** A prompt-injection number from a
+  fixed attack set keeps its rung and is marked *fixed attacks only* (LLM01:2026 PM11). *Why:* a
+  cap would put almost every published result level with vendors who publish nothing.
+- **§7 Freshness adds a 12-month re-assessment**, and an immediate one after an ownership change,
+  acquisition or rename, alongside quote-level change detection. *Why:* change detection only
+  catches what it watches.
+- **ASI06 has two primary signals** from the first edition: a decision on the write or read, or
+  quarantine and expiry of unverified memory (PM7, PM8).
 - **Review question reworded** to "which rung does the selected evidence reach for this risk's
   registered signal?" This is review regime 2.
 - **§11 → §9 Taxonomy and register versioning.** Each row carries taxonomy, register and review
@@ -43,7 +57,7 @@ mechanism per risk. Nothing was graded under v0.1, so no published grade changes
 
 - **Certification as evidence** (v0.1 Class 4 certification path, AIUC-1 reference, allowlist).
   Certificates are now a separate attribute, *vendor's own system independently assured*, with no
-  rung (§4). *Why:* a certificate such as AIUC-1 assures how a vendor runs its own AI systems. It
+  rung (§4), labelled *checked with issuer* or *vendor states*. *Why:* a certificate such as AIUC-1 assures how a vendor runs its own AI systems. It
   does not test whether the product mitigates a named risk for the buyer.
 - **The open-repository path to Class 4.** *Why:* being able to read code is not evidence that it
   mitigates the risk, and an open core does not show what the hosted product does.
