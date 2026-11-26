@@ -150,8 +150,8 @@ cases:
   category: detection only
   risk: ASI01:2026
   evidence: |
-    We baseline each agent's normal goals and alert your security team the
-    moment its behaviour drifts.
+    Goal hijack detection: we baseline each agent's normal goals and alert your
+    security team the moment its behaviour drifts.
   expected: {outcome: claimed only, polarity: mitigates}
   why: >-
     Alerting without a pause or block does not meet the ASI01 signal.
@@ -160,8 +160,8 @@ cases:
   category: detection only
   risk: LLM06:2026
   evidence: |
-    Cost dashboards show spend per agent, with email alerts at 80% and 100% of
-    budget.
+    Stop runaway AI costs: dashboards show spend per agent, with email alerts at
+    80% and 100% of budget.
   expected: {outcome: claimed only, polarity: mitigates}
   why: >-
     OWASP asks for enforcement that halts, "rather than alerting thresholds"; nothing here stops a call.
