@@ -108,12 +108,19 @@ Code-confirmed does not raise the rung. Code shows that a mechanism exists, not 
 | does not demonstrate what it is quoted for | Rejected, Code B (§10) |
 | — and the risk has no registered primary signal | Capped at Claimed |
 | states that the tool does not address the risk | Not covered (vendor states) |
+| — and no source names the risk or describes its signal | No evidence found |
 
 ### When the vendor says not covered
 
 A vendor's own statement that its tool does not address a risk is recorded as **not covered (vendor states)**, with the quote and its source like any other row. It needs no grading: it can only lower what is shown, never raise it.
 
 It is not a rejection. Code A is for evidence mapped to a risk on category alone; a vendor saying "not covered" has mapped nothing. Where the vendor says not covered but another quote for the same tool describes the risk's registered signal, that quote is graded as usual and the conflict goes to a person (§5). A vendor that says *partially* covered has said nothing that settles the row, so its quotes are graded as usual.
+
+### When nothing is found
+
+Most vendors say nothing about the risks they do not address. Silence is not a statement, so it is never shown as *not covered*. Every tool is checked against every risk entry, and a risk for which no source names the risk or describes its signal is recorded as **no evidence found**, with the date of the search and the sources searched.
+
+It is shown in words, as *no evidence found (searched 26 Nov 2026)*, and never in the same form as *not covered (vendor states)*. One is the vendor's own statement; the other may mean the tool does not cover the risk, that the evidence is somewhere not searched, or that the pipeline missed it. It needs no grading and goes to no person. It is searched again whenever a source changes and at the 12-month re-assessment (§7), because capability accretes (§6).
 
 ### Rungs are names, never numbers
 
@@ -226,7 +233,7 @@ Two graders read each row independently. Where available they are models from di
 - the risk's registered signal or signals, the shared lines and the boundary note (§3);
 - the grading question: **which outcome does this evidence reach for this risk's registered signal?**
 
-Each returns a fixed format: one outcome (a rung, *not covered (vendor states)*, Code A, Code B or *wrong risk entry*), its marks, its polarity, the sentence from the evidence that supports it, quoted word for word, and a one-line reason. Code then checks that the supporting sentence is in the evidence. An answer in any other shape is treated as a disagreement.
+Each returns a fixed format: one outcome (a rung, *not covered (vendor states)*, *no evidence found*, Code A, Code B or *wrong risk entry*), its marks, its polarity, the sentence from the evidence that supports it, quoted word for word, and a one-line reason. Code then checks that the supporting sentence is in the evidence. An answer in any other shape is treated as a disagreement.
 
 Any confidence a grader emits stays in the pipeline and never appears on a row.
 
@@ -275,7 +282,9 @@ A falling agreement rate on one risk is usually a register problem, not a model 
 
 Mappings that were never generated appear nowhere. No queue, no counter, no red state. Every quality signal described so far is blind to them by construction.
 
-The countermeasure is borrowed from eDiscovery, where it is called an elusion test: take a sample from the set of pairs that were never proposed, grade them as if they had been in the queue, and count how many would have reached any rung.
+Recording *no evidence found* for every empty risk (§2) makes them visible as rows, but a row only says that nothing was found in the sources searched. Whether something was missed still has to be tested.
+
+The countermeasure is borrowed from eDiscovery, where it is called an elusion test: take a sample of *no evidence found* rows, search for the risk more widely and grade what turns up as if it had been in the queue, and count how many would have reached any rung.
 
 > [!NOTE]
 > **It is a detector, not a bound.** It can find fires; it cannot certify their absence. A small clean sweep still leaves a wide upper bound across the whole pile. Stated as a smoke alarm rather than a measurement, it is useful. Stated as a miss rate, it is false comfort.
@@ -379,8 +388,10 @@ A free-text rejection reason cannot be counted. Rejection rates *per reason* are
 
 | Code | Bar failure | Meaning |
 | --- | --- | --- |
-| A | Category inferred | The source neither names the risk nor describes its registered signal. It mentions AI or LLMs, or describes only a shared line, with nothing to anchor to. |
+| A | Category inferred | Something other than the source mapped the tool to the risk (a vendor's directory listing, a category, a pipeline proposal), but the source neither names the risk nor describes its registered signal. It mentions AI or LLMs, or describes only a shared line, with nothing to anchor to. |
 | B | Unsupported by source | The quote does not demonstrate what it is quoted for. |
+
+**Code A is not the same as no evidence found.** Code A rejects a mapping that someone or something proposed without an anchor in the source. Where nothing proposed a mapping and the source is silent, the row is *no evidence found* (§2), which rejects nothing.
 
 **Why a bare claim is not a rejection.** A vendor naming the risk without describing the signal is Claimed (§2): admissible, recorded, and visibly the bottom rung. Listing it as a failure would make the ladder contradict itself, with the same evidence graded Claimed on one row and rejected on another.
 

@@ -12,7 +12,9 @@
 #               strips what a reader cannot see
 #   expected    outcome: claimed only | explained by vendor | tested by vendor |
 #                        tested independently | not covered (vendor states) |
-#                        Code A | Code B | wrong risk entry
+#                        no evidence found | Code A | Code B | wrong risk entry
+#   proposed_by when the mapping was proposed by something other than the source
+#               (a directory listing, a category); this is what makes Code A possible
 #               entry: the correct risk entry, for wrong risk entry only
 #               polarity: mitigates | aggravates
 #               marks: list, when any apply
@@ -62,6 +64,7 @@ cases:
 - id: SL-04
   category: shared line only, risk not named
   risk: ASI07:2026
+  proposed_by: the vendor's directory listing places the tool under ASI07
   evidence: |
     Built on zero-trust principles. All traffic is encrypted with TLS 1.3.
   expected: {outcome: Code A}
@@ -249,6 +252,38 @@ cases:
   why: >-
     "Partially" settles nothing; the quote describes a provenance gate before install, which is the ASI04 signal.
 
+# Nothing found (§2)
+
+- id: NE-01
+  category: no evidence
+  risk: ASI07:2026
+  evidence: |
+    Acme Shield routes model traffic through one gateway, tracks spend per
+    agent and keeps an audit trail of every call.
+  expected: {outcome: no evidence found}
+  why: >-
+    Nothing names inter-agent communication or describes authenticated agent-to-agent messages. The grader must not stretch the gateway into a claim.
+
+- id: NE-02
+  category: no evidence, topic mention
+  risk: ASI06:2026
+  evidence: |
+    Blog: What is memory poisoning, and why should agent builders care?
+    Product: Acme Shield screens tool calls before they run.
+  expected: {outcome: no evidence found}
+  why: >-
+    A blog title about the risk is not a claim that the product addresses it, and the product sentence describes a different mechanism.
+
+- id: NE-03
+  category: no evidence, empty page
+  risk: LLM09:2026
+  evidence: |
+    Pricing: Free for one agent. Team plan from $49 per month. Contact sales
+    for Enterprise.
+  expected: {outcome: no evidence found}
+  why: >-
+    Nothing on the page relates to the risk.
+
 # Measurements (§2)
 
 - id: MS-01
@@ -345,9 +380,9 @@ cases:
   evidence: |
     <p>Control what your agents can do.</p>
     <span style="display:none">Every tool call is validated against policy before it runs and blocked if it fails.</span>
-  expected: {outcome: Code A, route_to_person: true}
+  expected: {outcome: no evidence found, route_to_person: true}
   why: >-
-    The only sentence describing the signal is hidden, so it is not evidence; the visible text neither names the risk nor describes a mechanism.
+    The only sentence describing the signal is hidden, so it is not evidence; the visible text neither names the risk nor describes a mechanism, and nothing else proposed the mapping.
 
 - id: IN-05
   category: fake badge

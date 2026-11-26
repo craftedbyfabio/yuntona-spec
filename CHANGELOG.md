@@ -26,11 +26,16 @@ the hard cases to a person, and measures the graders instead of assuming a perso
 - **Not covered (vendor states).** A vendor's statement that its tool does not address a risk is
   recorded as such, without grading. *Why:* v0.2 had no outcome for it; graders were forcing it into
   Code A, which is for evidence mapped on category alone.
+- **No evidence found.** Every tool is checked against every risk, and a risk with nothing in the
+  sources is recorded as *no evidence found*, with the date and the sources searched. It is never
+  shown as *not covered*. *Why:* silence is not a statement, and recording it makes the pairs the
+  pipeline missed visible to the §6 sample. Code A now applies only where something other than the
+  source proposed the mapping.
 - **§11 Protecting the pipeline.** Controls against prompt injection by vendor pages: graders with
   no tools or write access, code decides publishing, word-for-word evidence checks, visible text
   only, flags for text aimed at graders, two model families, vendor text escaped on the site.
   *Why:* the grader reads text written by the people it grades.
-- **Grader test suite** (`grader-tests.yaml`, suite 1): 34 known-answer cases, 7 of them attempts to
+- **Grader test suite** (`grader-tests.yaml`, suite 1): 37 known-answer cases, 3 of them pages with nothing to find and 7 of them attempts to
   manipulate the grader. Both graders must pass every case before a regime goes live.
 - **Monthly spot check** of ten machine-graded rows by a person, with the agreement published.
 
