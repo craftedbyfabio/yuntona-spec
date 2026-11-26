@@ -1,7 +1,7 @@
 ---
 title: Signal register
 register-version: "1"
-applies-to: Evidence-Graded Risk Mapping v0.2
+applies-to: Evidence-Graded Risk Mapping v0.2 and later
 licence: CC-BY-SA-4.0
 taxonomies:
   - "OWASP Top 10 for Agentic Applications 2026 (Version 2026, December 2025)"

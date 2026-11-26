@@ -4,6 +4,41 @@ Each entry corresponds to a git tag. Dates are the date the tag was created.
 
 ## Evidence-Graded Risk Mapping
 
+### v0.3 — unreleased (draft)
+
+Version 0.2 had a person review every row, blind to the proposed rung. Grading one tool took
+35 decisions, which does not scale. Version 0.3 lets rules and two independent graders decide, sends
+the hard cases to a person, and measures the graders instead of assuming a person is always right.
+
+**Changed**
+
+- **§5 Review → Grading.** Rows are machine-graded and published without a person unless the two
+  graders disagree, either reaches *tested by vendor* or higher, either marks *aggravates*, or the
+  source tried to steer them. Published rows say *machine-graded* or *reviewed*. *Why:* a person on
+  every row does not scale, and the error rate of the graders can be measured.
+- **Grading regime replaces review question regime.** The models, the grading instructions and the
+  test suite together are versioned and stamped on every row. Regime 3 starts with v0.3.
+- **Quality series** now track grader agreement, person overrides, spot-check agreement and the
+  test-suite record.
+
+**Added**
+
+- **Not covered (vendor states).** A vendor's statement that its tool does not address a risk is
+  recorded as such, without grading. *Why:* v0.2 had no outcome for it; graders were forcing it into
+  Code A, which is for evidence mapped on category alone.
+- **§11 Protecting the pipeline.** Controls against prompt injection by vendor pages: graders with
+  no tools or write access, code decides publishing, word-for-word evidence checks, visible text
+  only, flags for text aimed at graders, two model families, vendor text escaped on the site.
+  *Why:* the grader reads text written by the people it grades.
+- **Grader test suite** (`grader-tests.yaml`, suite 1): 34 known-answer cases, 7 of them attempts to
+  manipulate the grader. Both graders must pass every case before a regime goes live.
+- **Monthly spot check** of ten machine-graded rows by a person, with the agreement published.
+
+**Removed**
+
+- **Blind human review on every row**, the anchoring measurement and the reviewer self-report field.
+  *Why:* no person reviews most rows; the two graders are kept blind to each other instead.
+
 ### v0.2 — 2026-11-26
 
 Version 0.1 asked one question and answered three: who wrote the sentence, how directly the
