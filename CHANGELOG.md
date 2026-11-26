@@ -69,6 +69,11 @@ mechanism per risk. Nothing was graded under v0.1, so no published grade changes
 - **Freshness checks on gold labels** (v0.1 §9). *Why:* gold labels existed only to fit the
   calibrator.
 
+**Copyright**
+
+- The copyright holder changes from Yuntona Ltd to Fabio Baumeler. The v0.1 tag still names
+  Yuntona Ltd, because tagged versions never change; its rights are assigned separately.
+
 **Kept**
 
 - Scope boundary (§1), with a note that selecting a signal from OWASP's own guidance is in scope.
