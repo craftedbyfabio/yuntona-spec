@@ -1,6 +1,6 @@
 ---
 title: Signal register
-register-version: "1 (draft)"
+register-version: "1"
 applies-to: Evidence-Graded Risk Mapping v0.2
 licence: CC-BY-SA-4.0
 taxonomies:
@@ -13,7 +13,7 @@ taxonomies:
 This register names, for each risk entry, the one observable mechanism that evidence must describe before a mapping can reach **On-signal** under §2 of the specification. It is versioned separately from the specification: adding or changing a signal bumps the register version, not the specification version, and every mapping row carries both (§9).
 
 > [!IMPORTANT]
-> **Draft, first edition.** ASI06 was worked through in detail before this edition was written. The other nineteen entries are a first cut and need review before the register is tagged.
+> **First edition, released with specification v0.2 on 26 November 2026.** All twenty entries were reviewed before release. No tool has been graded against them yet, so expect corrections: open an issue citing the entry and the OWASP guideline.
 
 ## How to read an entry
 

@@ -4,7 +4,7 @@ Each entry corresponds to a git tag. Dates are the date the tag was created.
 
 ## Evidence-Graded Risk Mapping
 
-### v0.2 — unreleased (draft)
+### v0.2 — 2026-11-26
 
 Version 0.1 asked one question and answered three: who wrote the sentence, how directly the
 capability was described, and whether anyone was still checking. It then treated the answer as
