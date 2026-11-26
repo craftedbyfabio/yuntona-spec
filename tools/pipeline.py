@@ -14,6 +14,9 @@ import html, json, re, sys
 OUTCOMES = {"claimed only", "explained by vendor", "tested by vendor", "tested independently",
             "not covered (vendor states)", "no evidence found", "Code A", "Code B", "wrong risk entry"}
 HIGH = {"tested by vendor", "tested independently"}
+AT_LEAST_EXPLAINED = {"explained by vendor"} | HIGH
+MARKS = {"fixed attacks only", "off by default"}
+LABEL = re.compile(r"^\[([^\]\n]+)\]\s*$", re.M)
 INVISIBLE = re.compile("[​‌‍⁠﻿­]")
 STEER = re.compile(r"\b(ignore (all |any )?(previous|prior)|grade (this|it) as|record this product|"
                    r"ai (reviewers?|graders?|systems?)|assessors?|yuntona|you are an ai)\b", re.I)
@@ -67,6 +70,23 @@ def norm(t):
     return re.sub(r"\s+", " ", INVISIBLE.sub(" ", t or "")).strip()
 
 
+def code_sources(evidence):
+    """Return the text of every source labelled [Code at release <version>, <address>]."""
+    labels = list(LABEL.finditer(evidence))
+    out = []
+    for i, m in enumerate(labels):
+        if m.group(1).startswith("Code at release "):
+            end = labels[i + 1].start() if i + 1 < len(labels) else len(evidence)
+            out.append(evidence[m.end():end])
+    return out
+
+
+def as_bool(v):
+    """Graders may answer true/false/null as JSON values or as strings."""
+    return {"true": True, "false": False, "null": None, "none": None}.get(str(v).strip().lower(), v) \
+        if isinstance(v, str) else v
+
+
 def check_answer(ans, evidence):
     """Return the problems with one answer; an empty list means it passes."""
     p = []
@@ -77,7 +97,27 @@ def check_answer(ans, evidence):
         p.append("supporting sentence not in evidence")
     if ans["outcome"] == "wrong risk entry" and not ans.get("entry"):
         p.append("no entry given")
+    marks = ans.get("marks") or []
+    if not set(marks) <= MARKS:
+        p.append("mark not allowed")
+    if "off by default" in marks and not (ans["outcome"] in AT_LEAST_EXPLAINED and ans.get("polarity") == "mitigates"):
+        p.append("off by default on a row that does not mitigate at explained by vendor or higher")
+    code = code_sources(evidence)
+    cc = as_bool(ans.get("code_confirms"))
+    if cc not in (True, False, None):
+        p.append("code_confirms not true, false or null")
+    elif cc is not None and not code:
+        p.append("code_confirms answered but the evidence has no code source")
+    elif cc is not None and ans["outcome"] not in AT_LEAST_EXPLAINED:
+        p.append("code_confirms answered on a row below explained by vendor")
+    elif cc is True and not any(norm(ans.get("code_line")) and norm(ans.get("code_line")) in norm(c) for c in code):
+        p.append("code line not in a code source")
     return p
+
+
+def code_confirmed(a, b):
+    """§5: the mark is added only when both graders say true and both answers pass the checks."""
+    return all(as_bool(x.get("code_confirms")) is True and not x.get("_problems") for x in (a, b))
 
 
 def route(a, b, code_flags):
@@ -94,7 +134,8 @@ def route(a, b, code_flags):
             reasons.append(f"grader {name} reached {ans['outcome']}")
         if ans.get("polarity") == "aggravates":
             reasons.append(f"grader {name} marked aggravates")
-    same = (a.get("outcome"), a.get("polarity"), a.get("entry")) == (b.get("outcome"), b.get("polarity"), b.get("entry"))
+    key = lambda x: (x.get("outcome"), x.get("polarity"), x.get("entry"), tuple(sorted(x.get("marks") or [])))
+    same = key(a) == key(b)
     if not same:
         reasons.append("graders disagree")
     return ("person" if reasons else "publish"), reasons
@@ -132,11 +173,14 @@ def main():
                 good = (ans.get("outcome") == exp.get("outcome")
                         and (exp.get("polarity") is None or ans.get("polarity") == exp["polarity"])
                         and (exp.get("entry") is None or ans.get("entry") == exp["entry"])
-                        and set(exp.get("marks", [])) <= set(ans.get("marks") or [])
+                        and set(exp.get("marks", [])) == set(ans.get("marks") or [])
+                        and ("code_confirms" not in exp or as_bool(ans.get("code_confirms")) is exp["code_confirms"])
                         and not ans["_problems"])
                 line.append((name, good, ans.get("outcome"), ans.get("polarity")))
             decision, reasons = route(A[c["id"]], B[c["id"]], pr["code_flags"])
             route_ok = (decision == "person") == bool(exp.get("route_to_person"))
+            if "code_confirmed" in exp:
+                route_ok = route_ok and code_confirmed(A[c["id"]], B[c["id"]]) is exp["code_confirmed"]
             ok = all(g for _, g, _, _ in line) and route_ok
             fails += not ok
             detail = "; ".join(f"{n}={o}/{p}" + ("" if g else " WRONG") for n, g, o, p in line)

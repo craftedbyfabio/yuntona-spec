@@ -94,9 +94,17 @@ A vendor rerunning its own test stays Self-measured, however often it reruns. A 
 
 ### Code-confirmed is a modifier, not a rung
 
-For an open-source tool, an On-signal row can carry **code-confirmed at version X** when the mechanism the quote describes was found in the cited code at a named release. The record keeps the release, the file path and line range, and a hash of each cited file. If a cited file changes in a later release, the row returns to review (§7).
+For an open-source tool, an On-signal row can carry **code-confirmed at version X** when the mechanism the quote describes was found in the cited code at a named release. The record keeps the release, the file path and line range, and a hash of each cited file. If a cited file changes in a later release, the row is graded again (§7).
 
 Code-confirmed does not raise the rung. Code shows that a mechanism exists, not that it stops attacks. It applies only to the edition whose code was read: open-source code says nothing about a hosted or enterprise edition that is not published.
+
+The mark needs executable code that makes the decision the signal describes: the line that denies, rejects or halts. A comment, a docstring, a configuration field or a function name is the vendor describing its code, not the code doing it, and does not earn the mark. Both graders must answer that the cited code shows the mechanism and quote the line that shows it (§5). Where they do not both say so, the mark is left off. Leaving it off can only lower what is shown, so it goes to no person.
+
+### Off by default is a mark, not a rung
+
+A mechanism that does nothing until the deployer sets it up is marked **off by default**. This covers a policy engine that allows everything when no rules exist, a budget that is unset until someone sets one, and a protection that ships switched off. The row keeps its rung, because the mechanism exists and the vendor has explained it. The mark tells the reader that installing the tool does not by itself give them the mechanism.
+
+The mark is added only when the evidence states the default, in the vendor's text or in the cited code. Silence about the default is not a statement either way, so a row without the mark makes no claim that the mechanism is on out of the box. The mark applies only to rows that mitigate at explained by vendor or higher. A claimed-only row gains nothing to qualify.
 
 ### Where a quote lands
 
@@ -233,7 +241,7 @@ Two graders read each row independently. Where available they are models from di
 - the risk's registered signal or signals, the shared lines and the boundary note (§3);
 - the grading question: **which outcome does this evidence reach for this risk's registered signal?**
 
-Each returns a fixed format: one outcome (a rung, *not covered (vendor states)*, *no evidence found*, Code A, Code B or *wrong risk entry*), its marks, its polarity, the sentence from the evidence that supports it, quoted word for word, and a one-line reason. Code then checks that the supporting sentence is in the evidence. An answer in any other shape is treated as a disagreement.
+Each returns a fixed format: one outcome (a rung, *not covered (vendor states)*, *no evidence found*, Code A, Code B or *wrong risk entry*), its marks, its polarity, the sentence from the evidence that supports it, quoted word for word, and a one-line reason. Where the evidence includes code at a named release, each also answers whether that code shows the mechanism, and if so quotes the line that does. Code then checks that every quoted sentence and line is in the evidence. An answer in any other shape is treated as a disagreement.
 
 Any confidence a grader emits stays in the pipeline and never appears on a row.
 
@@ -241,7 +249,8 @@ Any confidence a grader emits stays in the pipeline and never appears on a row.
 
 | The graders… | What happens |
 | --- | --- |
-| agree on outcome and polarity, and the supporting sentence checks out | Published, labelled *machine-graded* |
+| agree on outcome, polarity and marks, and the supporting sentence checks out | Published, labelled *machine-graded* |
+| both answer that the cited code shows the mechanism, and both quoted lines check out | *Code-confirmed at version X* is added; otherwise it is left off, and the row is not sent to a person for that alone |
 | agree on *wrong risk entry* | Re-proposed against the entry they name, and graded again there |
 | disagree on anything | Sent to a person |
 | either reaches *tested by vendor* or *tested independently* | Sent to a person, whether or not they agree |

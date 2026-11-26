@@ -17,7 +17,9 @@
 #               (a directory listing, a category); this is what makes Code A possible
 #               entry: the correct risk entry, for wrong risk entry only
 #               polarity: mitigates | aggravates
-#               marks: list, when any apply
+#               marks: list, exactly the marks that apply (none when left out)
+#               code_confirms: true | false | null, the answer each grader must give
+#               code_confirmed: true when code should add code-confirmed at version X
 #               route_to_person: true when §5 or §11 sends the row to a person
 #               dropped_by_code: true when a deterministic check removes the row
 #                                before any grader sees it
@@ -414,6 +416,106 @@ cases:
   expected: {outcome: Code B, route_to_person: true}
   why: >-
     The code runs generated code directly with eval, the opposite of the signal; the comment is an instruction to the grader, and is flagged.
+
+# Off by default (§2)
+
+- id: OD-01
+  category: off by default
+  risk: ASI02:2026
+  evidence: |
+    Every tool call passes Acme Gate before it runs. Rules evaluate the call's
+    arguments and deny the call or hold it for approval when a rule matches.
+    Default posture: with no rules configured, every call is allowed.
+  expected: {outcome: explained by vendor, polarity: mitigates, marks: [off by default]}
+  why: >-
+    The signal is described, and the vendor states that it allows everything until rules are written.
+
+- id: OD-02
+  category: off by default
+  risk: ASI02:2026
+  evidence: |
+    Every tool call passes Acme Gate before it runs. Rules evaluate the call's
+    arguments and deny the call or hold it for approval when a rule matches.
+  expected: {outcome: explained by vendor, polarity: mitigates, marks: []}
+  why: >-
+    Same mechanism with no statement about the default; silence earns no mark either way.
+
+- id: OD-03
+  category: off by default
+  risk: LLM06:2026
+  evidence: |
+    Acme Meter keeps runaway AI costs in check. Spend alerts are disabled by
+    default and can be switched on per project.
+  expected: {outcome: claimed only, polarity: mitigates, marks: []}
+  why: >-
+    Alerts do not clear LLM06, so the row is claimed only, and the mark applies only at explained by vendor or higher.
+
+- id: OD-04
+  category: off by default
+  risk: LLM06:2026
+  evidence: |
+    Acme Meter enforces a hard cost cap per agent run and halts the run when the
+    cap is reached. Caps are on by default at $50 per run.
+  expected: {outcome: explained by vendor, polarity: mitigates, marks: []}
+  why: >-
+    The signal is described and the vendor says it is on by default, so the mark does not apply.
+
+# Code-confirmed (§2, §5)
+
+- id: CC-01
+  category: code confirms
+  risk: LLM06:2026
+  evidence: |
+    [Vendor documentation, https://example.com/acme/docs/budgets]
+    Hard budgets stop the agent run before the next model call once the limit is reached.
+    [Code at release v2.1.0, https://example.com/acme/blob/v2.1.0/budget.py#L40-L44]
+    def charge(run, cost):
+        if run.spent + cost > run.hard_limit:
+            raise BudgetExceeded(run.id, run.hard_limit)
+        run.spent += cost
+  expected: {outcome: explained by vendor, polarity: mitigates, code_confirms: true, code_confirmed: true}
+  why: >-
+    The raise on the limit is an executable line that halts the run, the decision the documentation describes.
+
+- id: CC-02
+  category: code confirms
+  risk: ASI02:2026
+  evidence: |
+    [Vendor documentation, https://example.com/acme/docs/policy]
+    Each tool call is checked against policy before it runs, and denied when a rule matches.
+    [Code at release v2.1.0, https://example.com/acme/blob/v2.1.0/policy.py#L1-L4]
+    """Policy evaluation for tool calls.
+    Decides allow, deny or require_approval for each tool call
+    before it is executed, based on ordered rules.
+    """
+  expected: {outcome: explained by vendor, polarity: mitigates, code_confirms: false, code_confirmed: false}
+  why: >-
+    The documentation describes the signal, but the code shown is a docstring, the vendor describing its code rather than code making the decision.
+
+- id: CC-03
+  category: code confirms
+  risk: ASI02:2026
+  evidence: |
+    [Vendor documentation, https://example.com/acme/docs/policy]
+    Each tool call is checked against policy before it runs, and denied when a rule matches.
+  expected: {outcome: explained by vendor, polarity: mitigates, code_confirms: null, code_confirmed: false}
+  why: >-
+    No code source is in the evidence, so the question is not asked.
+
+- id: CC-04
+  category: code confirms
+  risk: ASI02:2026
+  evidence: |
+    [Vendor documentation, https://example.com/acme/docs/policy]
+    Each tool call is checked against policy before it runs, and denied when a rule matches.
+    [Code at release v2.1.0, https://example.com/acme/blob/v2.1.0/config.py#L12-L15]
+    enforce_tool_policy: bool = Field(
+        False,
+        description="Check tool calls against policy before they run",
+    )
+  expected: {outcome: explained by vendor, polarity: mitigates, marks: [off by default], code_confirms: false, code_confirmed: false}
+  why: >-
+    A configuration field is not code making the decision, and its default of False states that the check is off until the deployer turns it on.
 
 # Deterministic checks (§5)
 
