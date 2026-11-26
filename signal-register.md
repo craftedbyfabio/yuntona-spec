@@ -201,9 +201,10 @@ A red-teaming product is not a mitigation for any entry. Its output can be the *
 
 - **Primary signal.** Tenant and permission scoping enforced inside the index query, server-side and at chunk level, not as a post-retrieval filter.
 - **Cites.** LLM09:2026 PM1.
-- **Does not clear.** Encryption of embeddings at rest (PM5, SL-ENC). Retrieval logs (PM6, SL-LOG).
+- **Second primary signal.** Provenance recorded for every embedding (source, ingestion time, trust tier, pipeline version) and used to invalidate a compromised batch, so its vectors are no longer retrieved. Cites LLM09:2026 PM2 ("Track provenance for every embedding... so compromised batches can be invalidated and audited"). A quote describing either signal reaches On-signal. This covers the poisoning failure, which the first signal does not.
+- **Does not clear.** Encryption of embeddings at rest (PM5, SL-ENC). Retrieval logs (PM6, SL-LOG). Provenance kept only for audit, with no way to invalidate a batch. Content normalisation before embedding (the first half of PM2) on its own.
 - **Boundary.** "Indirect prompt injection through retrieved content is covered in LLM01:2026... training-time poisoning of the embedding model in LLM05:2026... and agent-memory attacks that do not rely on embedding geometry in ASI06:2026."
-- **Considered, not chosen.** Provenance per embedding so compromised batches can be invalidated (PM2), and anomaly detection at ingest and retrieval (PM4). This entry covers four failure modes ("poisoning makes the system wrong, inversion makes it leak, jamming makes it silent, and access-control failure makes it indiscriminate"); one primary signal covers only the last. PM2 is the strongest candidate for a second primary. *This is where the one-signal rule is weakest; review.*
+- **Considered, not chosen.** Anomaly detection at ingest and retrieval (PM4): detection, and OWASP itself says re-ranking "does not replace provenance and ingest controls." This entry covers four failure modes ("poisoning makes the system wrong, inversion makes it leak, jamming makes it silent, and access-control failure makes it indiscriminate"). The two signals cover access-control failure and poisoning; inversion and jamming have no registered signal.
 
 ### LLM10:2026 Improper Output Handling
 

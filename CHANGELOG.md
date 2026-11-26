@@ -45,6 +45,9 @@ mechanism per risk. Nothing was graded under v0.1, so no published grade changes
 - **§7 Freshness adds a 12-month re-assessment**, and an immediate one after an ownership change,
   acquisition or rename, alongside quote-level change detection. *Why:* change detection only
   catches what it watches.
+- **LLM09 has two primary signals** from the first edition: tenant scoping inside the index query
+  (PM1), or per-embedding provenance used to invalidate a compromised batch (PM2). *Why:* one
+  signal covered access-control failure only, not poisoning.
 - **ASI06 has two primary signals** from the first edition: a decision on the write or read, or
   quarantine and expiry of unverified memory (PM7, PM8).
 - **Review question reworded** to "which rung does the selected evidence reach for this risk's

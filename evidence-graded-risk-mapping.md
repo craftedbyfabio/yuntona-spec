@@ -157,7 +157,7 @@ One signal per entry deliberately shuts out other mechanisms, and without a way 
 
 An open-ended "any reasonable control" clause is not offered. It would let the logging sentence back in.
 
-The register's first edition already has one entry with two primary signals. ASI06 accepts either a decision on the write or read (above) or quarantine, expiry or decay of unverified memory (PM7, PM8), for a tool that never scans the write but stops serving entries that have not been verified. It was added before any row was graded, so nothing had to be requeued. A later addition of the same kind would follow the path above.
+The register's first edition already has two entries with two primary signals. ASI06 accepts either a decision on the write or read (above) or quarantine, expiry or decay of unverified memory (PM7, PM8), for a tool that never scans the write but stops serving entries that have not been verified. LLM09 accepts either tenant scoping inside the index query (PM1) or per-embedding provenance that lets a compromised batch be invalidated (PM2). Both were added before any row was graded, so nothing had to be requeued. A later addition of the same kind would follow the path above.
 
 ### The same evidence can carry the opposite sign
 
