@@ -47,7 +47,7 @@ the hard cases to a person, and measures the graders instead of assuming a perso
   no tools or write access, code decides publishing, word-for-word evidence checks, visible text
   only, flags for text aimed at graders, two model families, vendor text escaped on the site.
   *Why:* the grader reads text written by the people it grades.
-- **Grader test suite** (`grader-tests.yaml`, suite 1): 50 known-answer cases, 3 of them pages with nothing to find and 7 of them attempts to
+- **Grader test suite** (`grader-tests.yaml`, suite 1): 52 known-answer cases, 3 of them pages with nothing to find and 7 of them attempts to
   manipulate the grader. Both graders must pass every case before a regime goes live.
 - **Monthly spot check** of ten machine-graded rows by a person, with the agreement published.
 - **Off by default mark** (§2). A mechanism that does nothing until the deployer sets it up, such
@@ -64,7 +64,8 @@ the hard cases to a person, and measures the graders instead of assuming a perso
   under a risk has made a claim, recorded as *claimed only*. *Wrong risk entry* and Code A apply
   only when Yuntona made the mapping: a directory category, a third party, or the pipeline's own
   matching. A quote beneath the vendor's own heading for a risk counts as the vendor's mapping, and
-  evidence labels now carry that heading. *Why:* three of four grader disagreements on Preloop came
+  evidence labels now carry that heading. Text that neither names the risk nor sits beneath the vendor's
+  heading for it has been mapped by no one, and is *no evidence found* if nothing else bears on it. *Why:* three of four grader disagreements on Preloop came
   from this one ambiguity.
 - **Marks must match.** Graders must now agree on marks as well as outcome and polarity before a row
   publishes, because marks are shown to readers.
@@ -75,6 +76,13 @@ the hard cases to a person, and measures the graders instead of assuming a perso
 - **Rule 1 clarified.** A vendor that says *not covered*, even with a qualifier, and then lists
   controls that only limit the damage, is still *not covered (vendor states)*. The listed controls
   are graded under their own entries.
+
+- **Cross-references are followed** (§5). When a vendor's text for one risk points to another risk
+  entry, code adds the vendor's text for that entry, labelled as referred to from this risk's
+  section, one level only. *Why:* Preloop answers LLM01, LLM03, LLM04 and ASI10 partly by pointing
+  to other sections, and the graders split on pointers they could not follow.
+- **A replaced decision comes back to a person** when the graders' answer differs from it, so new
+  evidence cannot silently reverse a person's call.
 
 **Removed**
 

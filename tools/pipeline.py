@@ -131,10 +131,35 @@ def decision_key(risk, quotes, register_body):
     return h.hexdigest()
 
 
-def route(a, b, code_flags, standing=None):
+RISK_ID = re.compile(r"\b((?:ASI|LLM)\d\d)(?::(\d{4}))?\b")
+
+
+def cross_references(quote, risk, year="2026"):
+    """§5: the other risk entries a vendor's quote for this risk points to, in order, one level only.
+    A bare identifier ("see ASI08") is read in the taxonomy the source answers; one naming another
+    year is not followed, because the numbering differs between editions."""
+    seen = []
+    for m in RISK_ID.finditer(quote):
+        if m.group(2) and m.group(2) != year:
+            continue
+        rid = f"{m.group(1)}:{year}"
+        if rid != risk and rid not in seen:
+            seen.append(rid)
+    return seen
+
+
+def differs(answer, decision):
+    """True when a graders' answer would change what a replaced person's decision showed."""
+    return (answer.get("outcome"), answer.get("polarity") or None, tuple(sorted(answer.get("marks") or []))) != \
+           (decision.get("outcome"), decision.get("polarity") or None, tuple(sorted(decision.get("marks") or [])))
+
+
+def route(a, b, code_flags, standing=None, replaced=None):
     """Apply the §5 table. Returns (decision, reasons).
     standing: a person's earlier decision whose key matches this row; it stands, and the
-    graders' answers are kept only for the agreement and override series."""
+    graders' answers are kept only for the agreement and override series.
+    replaced: a person's earlier decision whose key no longer matches; the row goes to a
+    person if the graders' answer differs from it."""
     if standing is not None:
         return "reviewed", ["a person's decision stands: quotes, sources and register entry unchanged"]
     reasons = []
@@ -149,10 +174,14 @@ def route(a, b, code_flags, standing=None):
             reasons.append(f"grader {name} reached {ans['outcome']}")
         if ans.get("polarity") == "aggravates":
             reasons.append(f"grader {name} marked aggravates")
-    key = lambda x: (x.get("outcome"), x.get("polarity"), x.get("entry"), tuple(sorted(x.get("marks") or [])))
+    # an empty field may come back as "" or null; both mean empty
+    key = lambda x: (x.get("outcome"), x.get("polarity") or None, x.get("entry") or None,
+                     tuple(sorted(x.get("marks") or [])))
     same = key(a) == key(b)
     if not same:
         reasons.append("graders disagree")
+    if replaced is not None and (differs(a, replaced) or differs(b, replaced)):
+        reasons.append("differs from a person's replaced decision")
     return ("person" if reasons else "publish"), reasons
 
 

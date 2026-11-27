@@ -464,12 +464,13 @@ cases:
   category: per-runtime credentials
   risk: ASI03:2026
   evidence: |
+    [Vendor documentation, https://example.com/acme/docs/owasp, under "ASI03:2026 Identity and Privilege Abuse"]
     Acme Gate keeps provider keys in its own secret store; agents never receive
     them. Each runtime gets its own short-lived token, and tool and model lists
     resolve per API key, so one runtime sees only the tools meant for it.
   expected: {outcome: claimed only, polarity: mitigates}
   why: >-
-    Per-runtime, short-lived tokens with per-key tool lists are not credentials bound to a task, which register 2 names as not clearing ASI03.
+    Filed under the vendor's ASI03 heading, so the vendor made the claim. Per-runtime, short-lived tokens with per-key tool lists are not credentials bound to a task, which register 2 names as not clearing ASI03.
 
 - id: CS-02
   category: per-task credentials
@@ -481,6 +482,34 @@ cases:
   expected: {outcome: explained by vendor, polarity: mitigates}
   why: >-
     Credentials are issued per task, short-lived, and rejected outside the purpose they were bound to: the ASI03 signal.
+
+# Cross-references (§5)
+
+- id: XR-01
+  category: vendor points to another section
+  risk: LLM03:2026
+  evidence: |
+    [Vendor documentation, https://example.com/acme/docs/owasp, under "LLM03:2026 Excessive Agency"]
+    The tool firewall (ASI02:2026) bounds what an agent may do.
+    [Vendor documentation, https://example.com/acme/docs/owasp, under "ASI02:2026 Tool Misuse and Exploitation", referred to from this risk's section]
+    Acme sits between the agent and every tool. Each call is checked by our
+    policy engine, outside the model, and denied or held for approval before it
+    reaches the downstream system.
+  expected: {outcome: explained by vendor, polarity: mitigates}
+  why: >-
+    The pointer alone describes nothing, but the section it points to describes an independent pre-execution policy decision point, the LLM03 signal, and is part of the vendor's answer for LLM03.
+
+- id: XR-02
+  category: vendor points to another section
+  risk: ASI10:2026
+  evidence: |
+    [Vendor documentation, https://example.com/acme/docs/owasp, under "ASI10:2026 Rogue Agents"]
+    See ASI08:2026 for the kill switch.
+    [Vendor documentation, https://example.com/acme/docs/owasp, under "ASI08:2026 Cascading Failures", referred to from this risk's section]
+    The kill switch halts every agent in the account when an operator presses it.
+  expected: {outcome: claimed only, polarity: mitigates}
+  why: >-
+    Following the pointer shows a manual kill switch, not a signed behavioural manifest checked before each action, so the ASI10 claim does not clear.
 
 # Off by default (§2)
 

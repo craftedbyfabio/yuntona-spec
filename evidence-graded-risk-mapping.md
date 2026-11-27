@@ -242,6 +242,10 @@ Before any model is asked, code checks what code can:
 
 A row that fails any of these is dropped, and no model sees it.
 
+### The vendor's own cross-references are followed
+
+A vendor often answers one risk by pointing to another: "see ASI04", "same position as ASI01", "the MCP firewall (ASI02)". When the quote for a risk names another risk entry, code adds the vendor's text for that entry to the evidence. It is labelled as referred to from this risk's section, so the graders read it as part of the vendor's answer for this risk. It is not treated as a separate mapping. Code follows pointers one level only, and only within the vendor's own sources. Without this, the graders see a pointer without the text it points to, and split on whether the pointer describes anything.
+
 ### Two graders, neither sees the other
 
 Two graders read each row independently. Where available they are models from different families, because two models of one family tend to make the same mistakes on the same wording. Each is given only:
@@ -268,7 +272,7 @@ Any confidence a grader emits stays in the pipeline and never appears on a row.
 
 A person's decision on a sent row is published labelled *reviewed*. Rows are never shown as reviewed when only machines graded them.
 
-A person's decision stands when the row is graded again. It is replaced only when the quoted span or its source changes, or when the register entry for that risk changes (§9). In those cases the evidence or the test is different, so the old decision no longer answers the question. A new model or new grading instructions do not replace it. The graders still grade the row, and their answers count in the agreement and override series. Without this, a regrade could quietly undo a person's correction whenever two graders happened to agree on the answer the person had rejected.
+A person's decision stands when the row is graded again. It is replaced only when the quoted span or its source changes, or when the register entry for that risk changes (§9). In those cases the evidence or the test is different, so the old decision no longer answers the question. The row is graded as usual, but it goes to a person if the graders' answer differs from the replaced decision, so a change of evidence cannot silently reverse a person's call. A new model or new grading instructions do not replace it. The graders still grade the row, and their answers count in the agreement and override series. Without this, a regrade could quietly undo a person's correction whenever two graders happened to agree on the answer the person had rejected.
 
 ### The graders are tested before they grade
 
