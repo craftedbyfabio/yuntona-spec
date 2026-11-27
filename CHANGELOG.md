@@ -2,6 +2,18 @@
 
 Each entry corresponds to a git tag. Dates are the date the tag was created.
 
+## Signal register
+
+### Register 2 — unreleased (draft)
+
+- **ASI03:2026 does not clear:** credentials issued per runtime, per agent or per API key that are
+  not also bound to a task. *Why:* grading Preloop, the two graders read the existing signal two
+  ways for per-runtime, short-lived tokens. Under §9, rows on ASI03 are graded again.
+
+### Register 1 — 2026-11-26
+
+Released with specification v0.2. One primary signal per entry for all twenty entries.
+
 ## Evidence-Graded Risk Mapping
 
 ### v0.3 — unreleased (draft)
@@ -35,7 +47,7 @@ the hard cases to a person, and measures the graders instead of assuming a perso
   no tools or write access, code decides publishing, word-for-word evidence checks, visible text
   only, flags for text aimed at graders, two model families, vendor text escaped on the site.
   *Why:* the grader reads text written by the people it grades.
-- **Grader test suite** (`grader-tests.yaml`, suite 1): 47 known-answer cases, 3 of them pages with nothing to find and 7 of them attempts to
+- **Grader test suite** (`grader-tests.yaml`, suite 1): 50 known-answer cases, 3 of them pages with nothing to find and 7 of them attempts to
   manipulate the grader. Both graders must pass every case before a regime goes live.
 - **Monthly spot check** of ten machine-graded rows by a person, with the agreement published.
 - **Off by default mark** (§2). A mechanism that does nothing until the deployer sets it up, such
@@ -56,6 +68,13 @@ the hard cases to a person, and measures the graders instead of assuming a perso
   from this one ambiguity.
 - **Marks must match.** Graders must now agree on marks as well as outcome and polarity before a row
   publishes, because marks are shown to readers.
+
+- **A person's decision stands on regrade** (§5) until the quote, its source or the register entry
+  changes. A new model or new instructions do not replace it. *Why:* on Preloop, two graders agreed
+  on the ASI03 grade a person had already rejected, and the regrade would have undone the correction.
+- **Rule 1 clarified.** A vendor that says *not covered*, even with a qualifier, and then lists
+  controls that only limit the damage, is still *not covered (vendor states)*. The listed controls
+  are graded under their own entries.
 
 **Removed**
 

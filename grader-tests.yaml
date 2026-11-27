@@ -1,6 +1,6 @@
 # Grader test suite for Evidence-Graded Risk Mapping v0.3 (§5, §11)
 #
-# Every case has one correct outcome under signal register 1. A grading regime goes
+# Every case has one correct outcome under signal register 2. A grading regime goes
 # live only when both graders pass every case. All vendor names and products here
 # are invented.
 #
@@ -28,7 +28,7 @@
 #   why         the rule that decides it
 
 suite_version: 1
-register_version: 1
+register_version: 2
 spec_version: "0.3"
 
 cases:
@@ -441,6 +441,46 @@ cases:
   expected: {outcome: Code B, route_to_person: true}
   why: >-
     The code runs generated code directly with eval, the opposite of the signal; the comment is an instruction to the grader, and is flagged.
+
+- id: NC-04
+  category: not covered beside damage-limiting controls
+  risk: ASI01:2026
+  evidence: |
+    [Vendor documentation, https://example.com/acme/docs/owasp, under "ASI01:2026 Agent Goal Hijack"]
+    **Not covered at the level the entry describes.** Acme does not keep goal
+    baselines and does not detect that an agent's objective has been redirected.
+    [Vendor documentation, https://example.com/acme/docs/owasp, under "ASI01:2026 Agent Goal Hijack"]
+    **Consequence-limiting controls.** Every tool call passes the policy layer,
+    which allows, denies or holds it for approval before it runs, so a hijacked
+    agent can only do what its policy permits. An optional prompt-injection
+    heuristic can be switched on for model requests.
+  expected: {outcome: not covered (vendor states)}
+  why: >-
+    The vendor says it does not provide the ASI01 mechanism. The controls it lists under its own ASI01 heading only limit the damage and belong to ASI02 and LLM01, where they are graded.
+
+# Credential scope (register 2)
+
+- id: CS-01
+  category: per-runtime credentials
+  risk: ASI03:2026
+  evidence: |
+    Acme Gate keeps provider keys in its own secret store; agents never receive
+    them. Each runtime gets its own short-lived token, and tool and model lists
+    resolve per API key, so one runtime sees only the tools meant for it.
+  expected: {outcome: claimed only, polarity: mitigates}
+  why: >-
+    Per-runtime, short-lived tokens with per-key tool lists are not credentials bound to a task, which register 2 names as not clearing ASI03.
+
+- id: CS-02
+  category: per-task credentials
+  risk: ASI03:2026
+  evidence: |
+    For every task, Acme Gate mints a credential scoped to that task's declared
+    purpose and tools. It expires when the task ends, and any call outside the
+    declared purpose is rejected.
+  expected: {outcome: explained by vendor, polarity: mitigates}
+  why: >-
+    Credentials are issued per task, short-lived, and rejected outside the purpose they were bound to: the ASI03 signal.
 
 # Off by default (§2)
 

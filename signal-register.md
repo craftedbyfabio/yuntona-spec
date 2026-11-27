@@ -1,6 +1,6 @@
 ---
 title: Signal register
-register-version: "1"
+register-version: "2"
 applies-to: Evidence-Graded Risk Mapping v0.2 and later
 licence: CC-BY-SA-4.0
 taxonomies:
@@ -13,7 +13,7 @@ taxonomies:
 This register names, for each risk entry, the one observable mechanism that evidence must describe before a mapping can reach **On-signal** under §2 of the specification. It is versioned separately from the specification: adding or changing a signal bumps the register version, not the specification version, and every mapping row carries both (§9).
 
 > [!IMPORTANT]
-> **First edition, released with specification v0.2 on 26 November 2026.** All twenty entries were reviewed before release. No tool has been graded against them yet, so expect corrections: open an issue citing the entry and the OWASP guideline.
+> **Second edition (draft).** The first edition was released with specification v0.2 on 26 November 2026. The second changes one entry, ASI03:2026, after the first tool graded against the register showed graders reading its signal two ways. Expect more corrections: open an issue citing the entry and the OWASP guideline.
 
 ## How to read an entry
 
@@ -70,7 +70,7 @@ A red-teaming product is not a mitigation for any entry. Its output can be the *
 
 - **Primary signal.** Credentials issued per agent and per task, short-lived and narrowly scoped, and rejected when used outside the subject, purpose or intent they were bound to.
 - **Cites.** ASI03:2026 PM1, PM5, PM7.
-- **Does not clear.** Detection of delegated or transitive permissions without enforcement (PM8, PM9). Human approval for privileged actions (PM4, SL-HITL). Identity and SSO for human users in general.
+- **Does not clear.** Credentials issued per runtime, per agent or per API key that are not also bound to a task. Short-lived tokens and per-subject tool lists do not make them per task. Detection of delegated or transitive permissions without enforcement (PM8, PM9). Human approval for privileged actions (PM4, SL-HITL). Identity and SSO for human users in general. *Register 2: the first sentence was added after graders split on whether per-runtime credentials meet the signal.*
 - **Boundary.** "Unintended or unsafe use of already granted privilege" is ASI02.
 - **Considered, not chosen.** Per-action re-authorisation through a central policy engine (PM3). Close to ASI02's signal; kept apart so the two entries stay distinguishable.
 

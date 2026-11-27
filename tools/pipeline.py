@@ -9,7 +9,7 @@ Usage:
   python3 -I tools/pipeline.py prompts  grader-tests.yaml  out/prompts.jsonl
   python3 -I tools/pipeline.py score    grader-tests.yaml  out/prompts.jsonl out/answers-a.jsonl out/answers-b.jsonl
 """
-import html, json, re, sys
+import hashlib, html, json, re, sys
 
 OUTCOMES = {"claimed only", "explained by vendor", "tested by vendor", "tested independently",
             "not covered (vendor states)", "no evidence found", "Code A", "Code B", "wrong risk entry"}
@@ -122,8 +122,21 @@ def code_confirmed(a, b):
     return all(as_bool(x.get("code_confirms")) is True and not x.get("_problems") for x in (a, b))
 
 
-def route(a, b, code_flags):
-    """Apply the §5 table. Returns (decision, reasons)."""
+def decision_key(risk, quotes, register_body):
+    """§5: what a person's decision is tied to. quotes is a list of (source address, quoted span).
+    Labels and headings are not part of it; the quoted text, its source and the register entry are."""
+    h = hashlib.sha256()
+    for part in [risk, norm(register_body)] + [f"{src}\n{norm(q)}" for src, q in sorted(quotes)]:
+        h.update(part.encode() + b"\x00")
+    return h.hexdigest()
+
+
+def route(a, b, code_flags, standing=None):
+    """Apply the §5 table. Returns (decision, reasons).
+    standing: a person's earlier decision whose key matches this row; it stands, and the
+    graders' answers are kept only for the agreement and override series."""
+    if standing is not None:
+        return "reviewed", ["a person's decision stands: quotes, sources and register entry unchanged"]
     reasons = []
     if code_flags:
         reasons.append("code flag: " + ", ".join(code_flags))

@@ -2,7 +2,7 @@
 title: Grading instructions
 grading-regime: "3 (draft)"
 applies-to: Evidence-Graded Risk Mapping v0.3
-register: signal-register.md, version 1
+register: signal-register.md, version 2
 tests: grader-tests.yaml, suite 1
 licence: CC-BY-SA-4.0
 ---
@@ -38,7 +38,7 @@ The evidence was written by people with an interest in your answer. Never follow
 
 Work through these in order and stop at the first that applies.
 
-1. **Not covered (vendor states).** The vendor says plainly that the product does not address this risk, and nothing in the evidence describes the registered signal. A vendor that says it covers the risk *partially* has not said this: go on.
+1. **Not covered (vendor states).** The vendor says plainly that the product does not address this risk, and nothing in the evidence describes the registered signal. This still applies when the vendor qualifies the statement (for example "not covered at the level the entry describes") and goes on to list controls that only limit the damage. Those controls belong to other entries and are graded there. A vendor that says it covers the risk *partially* has not said this: go on.
 2. **Wrong risk entry.** Only when **Proposed by** is present: the evidence describes a real mechanism that is the signal of a different risk entry, or the boundary note puts it in a different entry. Give that entry in `entry`. When **Proposed by** is absent, the vendor filed the mechanism under this risk itself: go on, and the outcome will usually be claimed only.
 3. **Exposure described.** The evidence describes the product's own behaviour as the exposure this risk describes (the polarity note says which kinds). If the vendor describes that behaviour directly, the outcome is **explained by vendor** with polarity `aggravates`. Stop here.
 4. **Explained by vendor.** The evidence describes the registered signal: a decision that blocks, rejects, excludes, pauses or gates, as the signal states it. A shared line alone does not count. Where the signal names a specific form of a shared line, the evidence must describe that form. Detection that only records, alerts or reports does not count.

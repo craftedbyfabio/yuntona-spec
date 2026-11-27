@@ -268,6 +268,8 @@ Any confidence a grader emits stays in the pipeline and never appears on a row.
 
 A person's decision on a sent row is published labelled *reviewed*. Rows are never shown as reviewed when only machines graded them.
 
+A person's decision stands when the row is graded again. It is replaced only when the quoted span or its source changes, or when the register entry for that risk changes (§9). In those cases the evidence or the test is different, so the old decision no longer answers the question. A new model or new grading instructions do not replace it. The graders still grade the row, and their answers count in the agreement and override series. Without this, a regrade could quietly undo a person's correction whenever two graders happened to agree on the answer the person had rejected.
+
 ### The graders are tested before they grade
 
 A published test suite ([`grader-tests.yaml`](grader-tests.yaml)) holds cases whose correct outcome is known, including attempts to manipulate the grader. A grading regime goes live only when both graders pass every case, and its pass record is published with it. The suite runs again whenever a model, the grading instructions or the signal register changes.
