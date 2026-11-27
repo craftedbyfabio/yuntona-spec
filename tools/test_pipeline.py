@@ -50,4 +50,20 @@ assert P.cross_references("LLM05:2026 is not covered.", "LLM05:2026") == []
 assert P.cross_references("See ASI08 for the kill switch.", "ASI10:2026") == ["ASI08:2026"]
 assert P.cross_references("Formerly LLM07:2025.", "LLM08:2026") == []
 
+# conflicting sources: the set-aside one must be dated earlier than another
+EV2 = ("[Vendor web page, https://x/old, dated 2025-03-01]\nWe never see your conversations.\n"
+       "[Vendor documentation, https://x/new, dated 2026-11-12]\nConversations are stored in full by default.\n")
+old_l = "[Vendor web page, https://x/old, dated 2025-03-01]"
+new_l = "[Vendor documentation, https://x/new, dated 2026-11-12]"
+agg = {"outcome": "explained by vendor", "polarity": "mitigates", "superseded_source": old_l}
+assert P.check_answer(agg, EV2) == []
+assert P.check_answer(dict(agg, superseded_source="[Made up]"), EV2) != []
+assert P.provably_older(old_l, EV2) and not P.provably_older(new_l, EV2)
+assert P.route(agg, dict(agg), [], evidence=EV2)[0] == "publish"
+assert P.route(dict(agg, superseded_source=new_l), dict(agg, superseded_source=new_l), [], evidence=EV2)[0] == "person"
+assert P.route(agg, dict(agg, superseded_source=None), [], evidence=EV2)[0] == "person"
+EV3 = EV2.replace(", dated 2025-03-01", "")
+assert P.route(dict(agg, superseded_source="[Vendor web page, https://x/old]"),
+               dict(agg, superseded_source="[Vendor web page, https://x/old]"), [], evidence=EV3)[0] == "person"
+
 print("all pipeline checks pass")

@@ -127,6 +127,12 @@ When Yuntona made the mapping, the outcome changes. That covers a directory cate
 
 Every tool is checked against every risk entry, so the same quote is also graded under the entry its mechanism belongs to. A vendor that files its tool policy under goal hijack gets Claimed for goal hijack and is graded on tool misuse in the usual way.
 
+### When the vendor's sources disagree
+
+Vendors leave old pages up. When two of the vendor's own sources say opposite things about the same behaviour, the more recent one is graded and the older one is set aside: it is not quoted, cited or shown. The grade describes what the product does now, not what an older page once said.
+
+Recency is decided by code, from the date each source carries: the release date for documentation and code read at a release, and the date the page itself states for a web page. A grader names the source it set aside, and code checks that this source has a date earlier than another source in the evidence. If it does not, because a source is undated or the dates are equal, the row goes to a person, graded meanwhile from the source that gives the lower outcome. Code collects only current sources in the first place: documentation and code at the latest release, and live pages. It does not collect archived copies or older versions of the documentation.
+
 ### When the vendor says not covered
 
 A vendor's own statement that its tool does not address a risk is recorded as **not covered (vendor states)**, with the quote and its source like any other row. It needs no grading: it can only lower what is shown, never raise it.

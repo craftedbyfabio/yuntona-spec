@@ -483,6 +483,36 @@ cases:
   why: >-
     Credentials are issued per task, short-lived, and rejected outside the purpose they were bound to: the ASI03 signal.
 
+# Conflicting sources (§2)
+
+- id: SC-01
+  category: sources disagree, dated
+  risk: LLM06:2026
+  evidence: |
+    [Vendor web page, https://example.com/acme/blog/cost-alerts, dated 2025-02-10]
+    Acme Meter keeps AI costs in check: it alerts you when spend passes a
+    threshold, and it never stops a run.
+    [Vendor documentation, https://example.com/acme/docs/budgets, dated 2026-10-01]
+    Acme Meter enforces a hard cost cap per agent run and halts the run when
+    the cap is reached.
+  expected: {outcome: explained by vendor, polarity: mitigates, superseded_source: "[Vendor web page, https://example.com/acme/blog/cost-alerts, dated 2025-02-10]"}
+  why: >-
+    The two pages contradict each other on whether runs are stopped. The later one describes the signal, so it is graded and the older one is set aside.
+
+- id: SC-02
+  category: sources disagree, undated
+  risk: LLM06:2026
+  evidence: |
+    [Vendor web page, https://example.com/acme/blog/cost-alerts]
+    Acme Meter keeps AI costs in check: it alerts you when spend passes a
+    threshold, and it never stops a run.
+    [Vendor documentation, https://example.com/acme/docs/budgets]
+    Acme Meter enforces a hard cost cap per agent run and halts the run when
+    the cap is reached.
+  expected: {outcome: claimed only, polarity: mitigates, superseded_source: "[Vendor documentation, https://example.com/acme/docs/budgets]", route_to_person: true}
+  why: >-
+    Neither source is dated, so the grader cannot tell which is current. It grades from the source giving the lower outcome, and code sends the row to a person.
+
 # Cross-references (§5)
 
 - id: XR-01

@@ -104,6 +104,9 @@ def check_answer(ans, evidence, proposed_by=None):
         p.append("mark not allowed")
     if "off by default" in marks and not (ans["outcome"] in AT_LEAST_EXPLAINED and ans.get("polarity") == "mitigates"):
         p.append("off by default on a row that does not mitigate at explained by vendor or higher")
+    sup = ans.get("superseded_source")
+    if sup and norm(sup) not in [norm(l) for l in labels(evidence)]:
+        p.append("superseded source is not a label in the evidence")
     code = code_sources(evidence)
     cc = as_bool(ans.get("code_confirms"))
     if cc not in (True, False, None):
@@ -115,6 +118,23 @@ def check_answer(ans, evidence, proposed_by=None):
     elif cc is True and not any(norm(ans.get("code_line")) and norm(ans.get("code_line")) in norm(c) for c in code):
         p.append("code line not in a code source")
     return p
+
+
+DATED = re.compile(r"dated (\d{4}-\d{2}-\d{2})")
+
+
+def labels(evidence):
+    """Every source label in the evidence, as written."""
+    return [m.group(0) for m in LABEL.finditer(evidence)]
+
+
+def provably_older(label, evidence):
+    """§2: True when this label carries a date earlier than another source's date in the evidence."""
+    mine = DATED.search(label or "")
+    if not mine:
+        return False
+    return any((d := DATED.search(other)) and d.group(1) > mine.group(1)
+               for other in labels(evidence) if other != label)
 
 
 def code_confirmed(a, b):
@@ -154,7 +174,7 @@ def differs(answer, decision):
            (decision.get("outcome"), decision.get("polarity") or None, tuple(sorted(decision.get("marks") or [])))
 
 
-def route(a, b, code_flags, standing=None, replaced=None):
+def route(a, b, code_flags, standing=None, replaced=None, evidence=""):
     """Apply the §5 table. Returns (decision, reasons).
     standing: a person's earlier decision whose key matches this row; it stands, and the
     graders' answers are kept only for the agreement and override series.
@@ -180,6 +200,12 @@ def route(a, b, code_flags, standing=None, replaced=None):
     same = key(a) == key(b)
     if not same:
         reasons.append("graders disagree")
+    sups = {norm(x.get("superseded_source")) for x in (a, b) if x.get("superseded_source")}
+    if sups:
+        if len(sups) > 1 or not all(x.get("superseded_source") for x in (a, b)):
+            reasons.append("graders set aside different sources")
+        elif not provably_older(a["superseded_source"], evidence):
+            reasons.append("set-aside source is not dated earlier than another source")
     if replaced is not None and (differs(a, replaced) or differs(b, replaced)):
         reasons.append("differs from a person's replaced decision")
     return ("person" if reasons else "publish"), reasons
@@ -220,9 +246,10 @@ def main():
                         and (exp.get("entry") is None or ans.get("entry") == exp["entry"])
                         and set(exp.get("marks", [])) == set(ans.get("marks") or [])
                         and ("code_confirms" not in exp or as_bool(ans.get("code_confirms")) is exp["code_confirms"])
+                        and ("superseded_source" not in exp or norm(ans.get("superseded_source")) == norm(exp["superseded_source"]))
                         and not ans["_problems"])
                 line.append((name, good, ans.get("outcome"), ans.get("polarity")))
-            decision, reasons = route(A[c["id"]], B[c["id"]], pr["code_flags"])
+            decision, reasons = route(A[c["id"]], B[c["id"]], pr["code_flags"], evidence=pr["evidence"])
             route_ok = (decision == "person") == bool(exp.get("route_to_person"))
             if "code_confirmed" in exp:
                 route_ok = route_ok and code_confirmed(A[c["id"]], B[c["id"]]) is exp["code_confirmed"]

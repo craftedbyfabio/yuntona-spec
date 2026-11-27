@@ -47,7 +47,7 @@ the hard cases to a person, and measures the graders instead of assuming a perso
   no tools or write access, code decides publishing, word-for-word evidence checks, visible text
   only, flags for text aimed at graders, two model families, vendor text escaped on the site.
   *Why:* the grader reads text written by the people it grades.
-- **Grader test suite** (`grader-tests.yaml`, suite 1): 52 known-answer cases, 3 of them pages with nothing to find and 7 of them attempts to
+- **Grader test suite** (`grader-tests.yaml`, suite 1): 54 known-answer cases, 3 of them pages with nothing to find and 7 of them attempts to
   manipulate the grader. Both graders must pass every case before a regime goes live.
 - **Monthly spot check** of ten machine-graded rows by a person, with the agreement published.
 - **Off by default mark** (§2). A mechanism that does nothing until the deployer sets it up, such
@@ -81,6 +81,11 @@ the hard cases to a person, and measures the graders instead of assuming a perso
   entry, code adds the vendor's text for that entry, labelled as referred to from this risk's
   section, one level only. *Why:* Preloop answers LLM01, LLM03, LLM04 and ASI10 partly by pointing
   to other sections, and the graders split on pointers they could not follow.
+- **When the vendor's sources disagree** (§2), the most recent is graded and the older one is set
+  aside, not quoted or cited. Code decides recency from the dates on the source labels (release
+  date, or the date a page states) and sends the row to a person when it cannot. Only current
+  sources are collected. *Why:* an older Preloop page contradicted its current documentation on
+  whether it sees conversations.
 - **A replaced decision comes back to a person** when the graders' answer differs from it, so new
   evidence cannot silently reverse a person's call.
 
