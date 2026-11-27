@@ -4,8 +4,10 @@ Open, versioned specifications for grading the evidence behind AI security claim
 
 | Specification | Version | Status |
 | --- | --- | --- |
-| [Evidence-Graded Risk Mapping](evidence-graded-risk-mapping.md) | 0.2 | Draft |
-| [Signal register](signal-register.md) | 1 | Draft |
+| [Evidence-Graded Risk Mapping](evidence-graded-risk-mapping.md) | 0.3 | Draft |
+| [Signal register](signal-register.md) | 2 | Draft |
+| [Grading instructions](grader-instructions.md) | Grading regime 3 | Draft |
+| [Grader test suite](grader-tests.yaml) | Suite 1 | Draft |
 
 **Evidence-Graded Risk Mapping** names what a tool's evidence shows against a named AI security
 risk. It grades claims on four rungs (Claimed, On-signal, Self-measured, Externally measured)
@@ -16,15 +18,23 @@ The **signal register** names that mechanism for each of the twenty entries, cit
 numbered mitigation guidance. It is versioned separately, so adding a signal does not change the
 specification.
 
+From v0.3, grades are produced by two model graders working from the same fixed **grading
+instructions**, with code deciding what publishes and what goes to a person (specification §5).
+The **grader test suite** holds known-answer cases the graders must pass before a grading regime
+is used. [`tools/`](tools) holds the deterministic part of the pipeline and its checks, and
+[`test-results/`](test-results) records each run of the suite.
+
 ## Status
 
-Version 0.2 is a draft, published before any results. No tool has been graded against a named
-risk under it yet. Version 0.1 remains available at its tag; [`CHANGELOG.md`](CHANGELOG.md) explains
+Version 0.3 is a draft. One tool has been graded in testing; no grade has been published yet.
+Grading regime 3 has so far been tested with two graders from the same model family; the
+specification asks for different families where available, and the test results say which were
+used. Earlier versions remain available at their tags; [`CHANGELOG.md`](CHANGELOG.md) explains
 what changed and why.
 
 ## Versions
 
-- Each release is a git tag (`v0.1`, `v0.2`, …). A tagged version never changes after release.
+- Each release is a git tag (`v0.1`, `v0.2`, `v0.3`, …). A tagged version never changes after release.
 - [`CHANGELOG.md`](CHANGELOG.md) records what changed between versions and why.
 - The rendered specification is published at [yuntona.ai](https://yuntona.ai). Every released
   version stays available at its own URL, so a citation to an older version keeps working.
@@ -32,11 +42,11 @@ what changed and why.
 
 ## Citing
 
-> Yuntona, *Evidence-Graded Risk Mapping*, version 0.2. https://yuntona.ai
+> Yuntona, *Evidence-Graded Risk Mapping*, version 0.3. https://yuntona.ai
 
 Always cite a version. The specification changes between versions, and a citation without one
 cannot be checked against the text it refers to. When citing a grade, cite the signal register
-version too.
+version and the grading regime too.
 
 ## Corrections and contributions
 

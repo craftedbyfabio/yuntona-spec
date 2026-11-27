@@ -4,10 +4,10 @@ Each entry corresponds to a git tag. Dates are the date the tag was created.
 
 ## Signal register
 
-### Register 2 — unreleased (draft)
+### Register 2 — 2026-11-27
 
 - **ASI03:2026 does not clear:** credentials issued per runtime, per agent or per API key that are
-  not also bound to a task. *Why:* grading Preloop, the two graders read the existing signal two
+  not also bound to a task. *Why:* grading the first tool, the two graders read the existing signal two
   ways for per-runtime, short-lived tokens. Under §9, rows on ASI03 are graded again.
 
 ### Register 1 — 2026-11-26
@@ -16,7 +16,7 @@ Released with specification v0.2. One primary signal per entry for all twenty en
 
 ## Evidence-Graded Risk Mapping
 
-### v0.3 — unreleased (draft)
+### v0.3 — 2026-11-27
 
 Version 0.2 had a person review every row, blind to the proposed rung. Grading one tool took
 35 decisions, which does not scale. Version 0.3 lets rules and two independent graders decide, sends
@@ -52,7 +52,7 @@ the hard cases to a person, and measures the graders instead of assuming a perso
 - **Monthly spot check** of ten machine-graded rows by a person, with the agreement published.
 - **Off by default mark** (§2). A mechanism that does nothing until the deployer sets it up, such
   as a policy engine that allows everything with no rules or a budget unset until configured, is
-  marked *off by default*. Added only when the evidence states the default. *Why:* grading Preloop
+  marked *off by default*. Added only when the evidence states the default. *Why:* grading the first tool
   showed four rows reading *explained by vendor* for controls that do nothing out of the box, and
   readers could not tell.
 - **How code-confirmed is awarded** (§2, §5). Both graders must say the cited code shows the
@@ -65,13 +65,13 @@ the hard cases to a person, and measures the graders instead of assuming a perso
   only when Yuntona made the mapping: a directory category, a third party, or the pipeline's own
   matching. A quote beneath the vendor's own heading for a risk counts as the vendor's mapping, and
   evidence labels now carry that heading. Text that neither names the risk nor sits beneath the vendor's
-  heading for it has been mapped by no one, and is *no evidence found* if nothing else bears on it. *Why:* three of four grader disagreements on Preloop came
+  heading for it has been mapped by no one, and is *no evidence found* if nothing else bears on it. *Why:* three of four grader disagreements on the first tool graded came
   from this one ambiguity.
 - **Marks must match.** Graders must now agree on marks as well as outcome and polarity before a row
   publishes, because marks are shown to readers.
 
 - **A person's decision stands on regrade** (§5) until the quote, its source or the register entry
-  changes. A new model or new instructions do not replace it. *Why:* on Preloop, two graders agreed
+  changes. A new model or new instructions do not replace it. *Why:* on the first tool graded, two graders agreed
   on the ASI03 grade a person had already rejected, and the regrade would have undone the correction.
 - **Rule 1 clarified.** A vendor that says *not covered*, even with a qualifier, and then lists
   controls that only limit the damage, is still *not covered (vendor states)*. The listed controls
@@ -79,13 +79,13 @@ the hard cases to a person, and measures the graders instead of assuming a perso
 
 - **Cross-references are followed** (§5). When a vendor's text for one risk points to another risk
   entry, code adds the vendor's text for that entry, labelled as referred to from this risk's
-  section, one level only. *Why:* Preloop answers LLM01, LLM03, LLM04 and ASI10 partly by pointing
+  section, one level only. *Why:* the first tool graded answers four risks partly by pointing
   to other sections, and the graders split on pointers they could not follow.
 - **When the vendor's sources disagree** (§2), the most recent is graded and the older one is set
   aside, not quoted or cited. Code decides recency from the dates on the source labels (release
   date, or the date a page states) and sends the row to a person when it cannot. Only current
-  sources are collected. *Why:* an older Preloop page contradicted its current documentation on
-  whether it sees conversations.
+  sources are collected. *Why:* the first tool graded had an older page that contradicted its
+  current documentation.
 - **A replaced decision comes back to a person** when the graders' answer differs from it, so new
   evidence cannot silently reverse a person's call.
 

@@ -19,7 +19,7 @@ It grades claims. It does not measure protection. Whether a tool actually stops 
 
 > [!IMPORTANT]
 > **Status: draft, published before results, deliberately.**
-> No tool has been graded against a named risk under this specification. Publishing the method first means any later grade can be checked against a standard that was fixed before the grades were known, and argued with on the method, not just on the conclusion.
+> One tool has been graded in testing; no grade has been published yet. Publishing the method first means any later grade can be checked against a standard that was fixed before the grades were known, and argued with on the method, not just on the conclusion.
 
 ## Contents
 

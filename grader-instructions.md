@@ -1,6 +1,6 @@
 ---
 title: Grading instructions
-grading-regime: "3 (draft)"
+grading-regime: "3"
 applies-to: Evidence-Graded Risk Mapping v0.3
 register: signal-register.md, version 2
 tests: grader-tests.yaml, suite 1

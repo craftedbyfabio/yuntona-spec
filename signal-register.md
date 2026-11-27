@@ -13,7 +13,7 @@ taxonomies:
 This register names, for each risk entry, the one observable mechanism that evidence must describe before a mapping can reach **On-signal** under §2 of the specification. It is versioned separately from the specification: adding or changing a signal bumps the register version, not the specification version, and every mapping row carries both (§9).
 
 > [!IMPORTANT]
-> **Second edition (draft).** The first edition was released with specification v0.2 on 26 November 2026. The second changes one entry, ASI03:2026, after the first tool graded against the register showed graders reading its signal two ways. Expect more corrections: open an issue citing the entry and the OWASP guideline.
+> **Second edition, released with specification v0.3 on 27 November 2026.** The first edition was released with specification v0.2 on 26 November 2026. The second changes one entry, ASI03:2026, after the first tool graded against the register showed graders reading its signal two ways. Expect more corrections: open an issue citing the entry and the OWASP guideline.
 
 ## How to read an entry
 
