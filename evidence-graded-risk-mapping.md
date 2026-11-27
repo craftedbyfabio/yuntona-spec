@@ -1,8 +1,8 @@
 ---
 title: Evidence-Graded Risk Mapping
-version: "0.2"
+version: "0.3"
 status: draft
-revised: 2026-10
+revised: 2026-11
 licence: CC-BY-SA-4.0
 taxonomies:
   - "OWASP Top 10 for LLM Applications 2026 (Version 2026, published 4 August 2026)"
@@ -19,7 +19,7 @@ It grades claims. It does not measure protection. Whether a tool actually stops 
 
 > [!IMPORTANT]
 > **Status: draft, published before results, deliberately.**
-> No tool has been graded against a named risk under this specification. Publishing the method first means any later grade can be checked against a standard that was fixed before the grades were known, and argued with on the method, not just on the conclusion.
+> One tool has been graded in testing; no grade has been published yet. Publishing the method first means any later grade can be checked against a standard that was fixed before the grades were known, and argued with on the method, not just on the conclusion.
 
 ## Contents
 
@@ -27,12 +27,13 @@ It grades claims. It does not measure protection. Whether a tool actually stops 
 2. [Evidence rungs](#2-evidence-rungs)
 3. [The signal register and polarity](#3-the-signal-register-and-polarity)
 4. [Certification is recorded, not graded](#4-certification-is-recorded-not-graded)
-5. [Review](#5-review)
+5. [Grading](#5-grading)
 6. [The invisible failure](#6-the-invisible-failure)
 7. [Freshness](#7-freshness)
 8. [Entity resolution](#8-entity-resolution)
 9. [Taxonomy and register versioning](#9-taxonomy-and-register-versioning)
 10. [Review discipline](#10-review-discipline)
+11. [Protecting the pipeline](#11-protecting-the-pipeline)
 
 ## §1 Scope boundary
 
@@ -93,9 +94,17 @@ A vendor rerunning its own test stays Self-measured, however often it reruns. A 
 
 ### Code-confirmed is a modifier, not a rung
 
-For an open-source tool, an On-signal row can carry **code-confirmed at version X** when the mechanism the quote describes was found in the cited code at a named release. The record keeps the release, the file path and line range, and a hash of each cited file. If a cited file changes in a later release, the row returns to review (§7).
+For an open-source tool, an On-signal row can carry **code-confirmed at version X** when the mechanism the quote describes was found in the cited code at a named release. The record keeps the release, the file path and line range, and a hash of each cited file. If a cited file changes in a later release, the row is graded again (§7).
 
 Code-confirmed does not raise the rung. Code shows that a mechanism exists, not that it stops attacks. It applies only to the edition whose code was read: open-source code says nothing about a hosted or enterprise edition that is not published.
+
+The mark needs executable code that makes the decision the signal describes: the line that denies, rejects or halts. A comment, a docstring, a configuration field or a function name is the vendor describing its code, not the code doing it, and does not earn the mark. Both graders must answer that the cited code shows the mechanism and quote the line that shows it (§5). Where they do not both say so, the mark is left off. Leaving it off can only lower what is shown, so it goes to no person.
+
+### Off by default is a mark, not a rung
+
+A mechanism that does nothing until the deployer sets it up is marked **off by default**. This covers a policy engine that allows everything when no rules exist, a budget that is unset until someone sets one, and a protection that ships switched off. The row keeps its rung, because the mechanism exists and the vendor has explained it. The mark tells the reader that installing the tool does not by itself give them the mechanism.
+
+The mark is added only when the evidence states the default, in the vendor's text or in the cited code. Silence about the default is not a statement either way, so a row without the mark makes no claim that the mechanism is on out of the box. The mark applies only to rows that mitigate at explained by vendor or higher. A claimed-only row gains nothing to qualify.
 
 ### Where a quote lands
 
@@ -106,6 +115,35 @@ Code-confirmed does not raise the rung. Code shows that a mechanism exists, not 
 | neither names the risk nor describes the signal | Rejected, Code A (§10) |
 | does not demonstrate what it is quoted for | Rejected, Code B (§10) |
 | — and the risk has no registered primary signal | Capped at Claimed |
+| was placed under this risk by Yuntona, not the vendor, and describes another entry's signal | Wrong risk entry (§10) |
+| states that the tool does not address the risk | Not covered (vendor states) |
+| — and no source names the risk or describes its signal | No evidence found |
+
+### Who put the quote under this risk
+
+A vendor that files a mechanism under a risk has made a claim about that risk, even when the mechanism belongs to another entry. That claim is recorded as Claimed. The vendor's own sources include its documentation, website, repository and code, and a quote counts as filed under a risk when it sits beneath the vendor's own heading for that risk.
+
+When Yuntona made the mapping, the outcome changes. That covers a directory category, the pipeline matching a page to risks, or a third party placing the tool under the risk. A mechanism that belongs to another entry is then Yuntona's mapping mistake, recorded as *wrong risk entry* and moved. One that bears on no entry is Code A (§10). Either way, the vendor has claimed nothing about this risk.
+
+Every tool is checked against every risk entry, so the same quote is also graded under the entry its mechanism belongs to. A vendor that files its tool policy under goal hijack gets Claimed for goal hijack and is graded on tool misuse in the usual way.
+
+### When the vendor's sources disagree
+
+Vendors leave old pages up. When two of the vendor's own sources say opposite things about the same behaviour, the more recent one is graded and the older one is set aside: it is not quoted, cited or shown. The grade describes what the product does now, not what an older page once said.
+
+Recency is decided by code, from the date each source carries: the release date for documentation and code read at a release, and the date the page itself states for a web page. A grader names the source it set aside, and code checks that this source has a date earlier than another source in the evidence. If it does not, because a source is undated or the dates are equal, the row goes to a person, graded meanwhile from the source that gives the lower outcome. Code collects only current sources in the first place: documentation and code at the latest release, and live pages. It does not collect archived copies or older versions of the documentation.
+
+### When the vendor says not covered
+
+A vendor's own statement that its tool does not address a risk is recorded as **not covered (vendor states)**, with the quote and its source like any other row. It needs no grading: it can only lower what is shown, never raise it.
+
+It is not a rejection. Code A is for evidence mapped to a risk on category alone; a vendor saying "not covered" has mapped nothing. Where the vendor says not covered but another quote for the same tool describes the risk's registered signal, that quote is graded as usual and the conflict goes to a person (§5). A vendor that says *partially* covered has said nothing that settles the row, so its quotes are graded as usual.
+
+### When nothing is found
+
+Most vendors say nothing about the risks they do not address. Silence is not a statement, so it is never shown as *not covered*. Every tool is checked against every risk entry, and a risk for which no source names the risk or describes its signal is recorded as **no evidence found**, with the date of the search and the sources searched.
+
+It is shown in words, as *no evidence found (searched 26 Nov 2026)*, and never in the same form as *not covered (vendor states)*. One is the vendor's own statement; the other may mean the tool does not cover the risk, that the evidence is somewhere not searched, or that the pipeline missed it. It needs no grading and goes to no person. It is searched again whenever a source changes and at the 12-month re-assessment (§7), because capability accretes (§6).
 
 ### Rungs are names, never numbers
 
@@ -153,7 +191,7 @@ One signal per entry deliberately shuts out other mechanisms, and without a way 
 
 - by **public issue** on this repository, citing the numbered guideline in the same entry that it comes from;
 - decided in public, with the **reason for rejection** recorded on the issue if it is declined;
-- if accepted, as a **register version bump** that requeues the affected rows (§9). It is never a reviewer improvising on a single mapping.
+- if accepted, as a **register version bump** that requeues the affected rows (§9). It is never a grader or a person improvising on a single mapping.
 
 An open-ended "any reasonable control" clause is not offered. It would let the logging sentence back in.
 
@@ -194,41 +232,79 @@ The rules are short:
 - It never changes a rung, and is never displayed adjacent to a rung, where it would read as corroboration.
 - No allowlist is needed, because the attribute grades nothing. It states a fact and says how far it was checked.
 
-## §5 Review
+## §5 Grading
 
-*Every row is reviewed by a person; nothing promotes itself*
+*Rules and code decide; people handle the exceptions*
 
-A model or pipeline may propose mappings: a tool, a risk, a quoted span, a suggested rung. Every row is then reviewed by a person before it is published. Nothing is promoted automatically, at any confidence.
+Every row is graded by machine and published without a person reviewing it, unless the row meets one of the conditions below. Version 0.2 had a person review every row. That does not scale past a handful of tools, and the error it guards against is better measured than assumed away.
 
-Version 0.1 planned a calibrated confidence score and automatic promotion above a derived threshold. Both are removed. Calibration needed hundreds of labels before the score meant anything; while every row is reviewed anyway, a score adds nothing to the decision. Published next to a rung, it would also be read as a grade. Any confidence a model emits while proposing stays in the pipeline and never appears on a row.
+### Deterministic checks come first
 
-### Blind review and anchoring
+Before any model is asked, code checks what code can:
 
-On review, the proposed rung is hidden and the evidence is adjudicated cold. Pre-filled answers anchor reviewers: someone shown "On-signal" agrees more often than someone shown the same evidence with nothing attached. Left unchecked, the reviewed set stops measuring the evidence and starts measuring agreement with the pipeline.
+- the quoted span appears word for word in the source, in text a human reader of the page can see (§11);
+- the source address, the date it was read and the product version are recorded;
+- for a code-confirmed mark, the cited file exists at the named release and its hash is recorded.
 
-Where a sample is reviewed both ways, the divergence between blind and anchored verdicts measures the reviewer's anchoring bias. It costs nothing beyond hiding a field, and it is publishable. A number that could embarrass the publisher is evidence the publisher was not selecting flattering ones.
+A row that fails any of these is dropped, and no model sees it.
 
-### The question asked is part of the instrument
+### The vendor's own cross-references are followed
 
-The reviewer answers one question: **which rung does the selected evidence reach for this risk's registered signal?**
+A vendor often answers one risk by pointing to another: "see ASI04", "same position as ASI01", "the MCP firewall (ASI02)". When the quote for a risk names another risk entry, code adds the vendor's text for that entry to the evidence. It is labelled as referred to from this risk's section, so the graders read it as part of the vendor's answer for this risk. It is not treated as a separate mapping. Code follows pointers one level only, and only within the vendor's own sources. Without this, the graders see a pointer without the text it points to, and split on whether the pointer describes anything.
 
-"Do you agree with this proposed mapping?" would produce different labels, diverging exactly where it matters: on a plausible mapping with weak evidence. So any rewording of the review question is a change of measurement regime, not an interface tweak. It carries its own version, stamped on every row alongside the taxonomy and register versions (§9). This question is regime 2; version 0.1's question was regime 1.
+### Two graders, neither sees the other
 
-### Self-report is marked as such
+Two graders read each row independently. Where available they are models from different families, because two models of one family tend to make the same mistakes on the same wording. Each is given only:
 
-Some fields are computed and cannot be misreported. One cannot: whether the reviewer's decision relied on information beyond the selected evidence. It measures bar slippage, accepting because you know the product rather than because the quoted span demonstrates it. A yes is recorded and never penalised, documented as self-reported, and excluded from anything treating computed measurements as ground truth.
+- the visible evidence, with its source;
+- the risk's registered signal or signals, the shared lines and the boundary note (§3);
+- the grading question: **which outcome does this evidence reach for this risk's registered signal?**
 
-### Review-quality series
+Each returns a fixed format: one outcome (a rung, *not covered (vendor states)*, *no evidence found*, Code A, Code B or *wrong risk entry*), its marks, its polarity, the sentence from the evidence that supports it, quoted word for word, and a one-line reason. Where the evidence includes code at a named release, each also answers whether that code shows the mechanism, and if so quotes the line that does. Code then checks that every quoted sentence and line is in the evidence. An answer in any other shape is treated as a disagreement.
 
-Comparing the pipeline's proposal with the reviewer's verdict measures whether the pipeline was *right*. It is recorded as three series rather than one override rate, because collapsing them destroys the distinction:
+Any confidence a grader emits stays in the pipeline and never appears on a row.
+
+### What publishes and what goes to a person
+
+| The graders… | What happens |
+| --- | --- |
+| agree on outcome, polarity and marks, and the supporting sentence checks out | Published, labelled *machine-graded* |
+| both answer that the cited code shows the mechanism, and both quoted lines check out | *Code-confirmed at version X* is added; otherwise it is left off, and the row is not sent to a person for that alone |
+| agree on *wrong risk entry* | Re-proposed against the entry they name, and graded again there |
+| disagree on anything | Sent to a person |
+| either reaches *tested by vendor* or *tested independently* | Sent to a person, whether or not they agree |
+| either marks the polarity *aggravates* | Sent to a person |
+| either raises an injection flag (§11) | Sent to a person |
+
+A person's decision on a sent row is published labelled *reviewed*. Rows are never shown as reviewed when only machines graded them.
+
+A person's decision stands when the row is graded again. It is replaced only when the quoted span or its source changes, or when the register entry for that risk changes (§9). In those cases the evidence or the test is different, so the old decision no longer answers the question. The row is graded as usual, but it goes to a person if the graders' answer differs from the replaced decision, so a change of evidence cannot silently reverse a person's call. A new model or new grading instructions do not replace it. The graders still grade the row, and their answers count in the agreement and override series. Without this, a regrade could quietly undo a person's correction whenever two graders happened to agree on the answer the person had rejected.
+
+### The graders are tested before they grade
+
+A published test suite ([`grader-tests.yaml`](grader-tests.yaml)) holds cases whose correct outcome is known, including attempts to manipulate the grader. A grading regime goes live only when both graders pass every case, and its pass record is published with it. The suite runs again whenever a model, the grading instructions or the signal register changes.
+
+The suite measures known failure modes. Unknown ones are caught two ways:
+
+- **a monthly spot check**: a person grades ten published rows chosen at random, and the agreement is published;
+- **error reports**: every published row links to a way to report it, and vendors can correct facts about their own product.
+
+### The grading regime is part of the instrument
+
+The models, the exact grading instructions and the test suite together are the **grading regime**. Changing any of them is a change of measurement, not a tweak. Each regime carries a version, stamped on every row alongside the taxonomy and register versions (§9). Version 0.3 starts regime 3; regimes 1 and 2 were the human review questions of versions 0.1 and 0.2.
+
+### Grading-quality series
+
+These describe the pipeline; they never appear on a row.
 
 | Series | Question |
 | --- | --- |
-| Verdict agreement | Was the mapping right? |
-| Rung agreement | Was the evidence graded right? |
-| Span correction | Was the right sentence found? |
+| Grader agreement | How often do the two graders agree? |
+| Override rate | How often does a person change a sent row, and on what: outcome, polarity or supporting sentence? |
+| Spot-check agreement | How often does a person agree with a machine-graded row? |
+| Test-suite record | Which cases each regime passed |
 
-A right-verdict, wrong-sentence case is a pipeline miss and a mapping pass at the same time. One rate cannot say that. These series describe the pipeline; they never appear on a row.
+A falling agreement rate on one risk is usually a register problem, not a model problem: the signal is worded so two careful readers can disagree.
 
 ## §6 The invisible failure
 
@@ -236,7 +312,9 @@ A right-verdict, wrong-sentence case is a pipeline miss and a mapping pass at th
 
 Mappings that were never generated appear nowhere. No queue, no counter, no red state. Every quality signal described so far is blind to them by construction.
 
-The countermeasure is borrowed from eDiscovery, where it is called an elusion test: take a sample from the set of pairs that were never proposed, review them properly as if they had been in the queue, and count how many would have reached any rung.
+Recording *no evidence found* for every empty risk (§2) makes them visible as rows, but a row only says that nothing was found in the sources searched. Whether something was missed still has to be tested.
+
+The countermeasure is borrowed from eDiscovery, where it is called an elusion test: take a sample of *no evidence found* rows, search for the risk more widely and grade what turns up as if it had been in the queue, and count how many would have reached any rung.
 
 > [!NOTE]
 > **It is a detector, not a bound.** It can find fires; it cannot certify their absence. A small clean sweep still leaves a wide upper bound across the whole pile. Stated as a smoke alarm rather than a measurement, it is useful. Stated as a miss rate, it is false comfort.
@@ -265,7 +343,7 @@ The two triggers do different jobs. A changed quote sends one row back to review
 
 ### Demotion carries the wrong prior by default
 
-Because capability accretes, a quote that no longer appears usually signals a documentation rewrite, not a withdrawn capability. A demotion is therefore framed to the reviewer as *probably still true, re-anchor it*, not as probable removal. A reviewer primed to expect removal will confirm removals that never happened.
+Because capability accretes, a quote that no longer appears usually signals a documentation rewrite, not a withdrawn capability. A demotion is therefore framed to the graders as *probably still true, re-anchor it*, not as probable removal. A grader primed to expect removal will confirm removals that never happened.
 
 ### Publish the check series, not the last-checked date
 
@@ -305,7 +383,7 @@ The collision is live in the published documents themselves. The Agentic Top 10 
 | --- | --- |
 | Taxonomy | The standards body publishes a new list |
 | Signal register | A primary signal is added, changed or withdrawn (§3) |
-| Review question regime | The review question is reworded (§5) |
+| Grading regime | A grading model, the grading instructions or the test suite changes (§5) |
 
 A row is valid only under the combination it was made under, and the three invalidate differently.
 
@@ -340,8 +418,10 @@ A free-text rejection reason cannot be counted. Rejection rates *per reason* are
 
 | Code | Bar failure | Meaning |
 | --- | --- | --- |
-| A | Category inferred | The source neither names the risk nor describes its registered signal. It mentions AI or LLMs, or describes only a shared line, with nothing to anchor to. |
+| A | Category inferred | Something other than the source mapped the tool to the risk (a vendor's directory listing, a category, a pipeline proposal), but the source neither names the risk nor describes its registered signal. It mentions AI or LLMs, or describes only a shared line, with nothing to anchor to. |
 | B | Unsupported by source | The quote does not demonstrate what it is quoted for. |
+
+**Code A is not the same as no evidence found.** Code A rejects a mapping that someone or something proposed without an anchor in the source. Where nothing proposed a mapping and the source is silent, the row is *no evidence found* (§2), which rejects nothing.
 
 **Why a bare claim is not a rejection.** A vendor naming the risk without describing the signal is Claimed (§2): admissible, recorded, and visibly the bottom rung. Listing it as a failure would make the ladder contradict itself, with the same evidence graded Claimed on one row and rejected on another.
 
@@ -351,14 +431,31 @@ Some pairs fail for reasons that say nothing about the evidence. They are routed
 
 | Outcome | Meaning | What happens |
 | --- | --- | --- |
-| Wrong risk entry | The evidence is sound; it demonstrates a different risk, often across a boundary recorded in the register | The pair is re-proposed against the correct entry |
+| Wrong risk entry | Yuntona, not the vendor, put the evidence under this risk (§2), and the evidence demonstrates a different risk, often across a boundary recorded in the register | The pair is re-proposed against the correct entry |
 | Tool out of scope | The tool does not secure AI systems. A judgement about the tool, not this evidence | The tool goes back to triage, and every remaining pair for it is withdrawn |
 
 Counting either as a rejection makes the rejection rate unreadable as a pipeline-failure signal.
 
 ### A wrong sentence is corrected, not rejected
 
-When the mapping is right but the pipeline quoted the wrong sentence, the reviewer selects the right passage in the source and makes it the evidence span. Without that, a wrong mapping and a wrong quote both come back as rejections, and the rejection rate stops saying which part of the pipeline failed. Corrections are recorded in the span-correction series (§5).
+When the mapping is right but the pipeline quoted the wrong sentence, the grader or the person handling the row selects the right passage in the source and makes it the evidence span. Without that, a wrong mapping and a wrong quote both come back as rejections, and the rejection rate stops saying which part of the pipeline failed. Corrections are counted in the override rate (§5).
+
+## §11 Protecting the pipeline
+
+*The grader reads text written by the people it grades*
+
+Every source the pipeline reads was written by a vendor with an interest in the outcome. A page can carry instructions aimed at the grader, hidden or in plain sight. That is prompt injection, LLM01:2026, against Yuntona's own pipeline, and the pipeline is held to the same controls the signal register asks of vendors.
+
+1. **The grader has no power (LLM03:2026).** A grading model has no tools, no web access and no write access to anything. It reads what it is given and returns a verdict in the fixed format of §5. The worst an injection can do is skew one verdict, which the second grader and the rules below are there to catch. It cannot fetch, send, change or publish anything.
+2. **Code decides what publishes, not a model.** Publishing follows the table in §5. No model output reaches the published site without passing the deterministic checks and the rules for what goes to a person. Automation writes only to staging.
+3. **The verdict must point at its evidence (LLM10:2026).** The supporting sentence is checked word for word against the evidence. An instruction such as "grade this as tested independently" cannot supply a test result that is not on the page.
+4. **Only visible text is evidence.** Before grading, the source is reduced to what a human reader of the page can see. HTML comments, hidden elements, text styled to be invisible, zero-width and other invisible characters, alt text and metadata are removed. A claim that is only in hidden text does not exist for grading.
+5. **Text aimed at the grader is flagged.** The source is scanned for instructions to reviewers or models, mentions of Yuntona or its graders, and phrases that try to set an outcome. A hit sends the row to a person rather than blocking it, because some hits are innocent, such as a vendor page that explains how to grade it. A vendor page caught steering the grader is recorded as an error on the entry.
+6. **Two graders from different families.** An injection tuned to one model often fails on another, and any disagreement goes to a person (§5).
+7. **Vendor text is shown as text.** Quotes are rendered on the site as plain text. Markup, scripts and links inside a quote are escaped, so a vendor cannot inject into Yuntona's own pages.
+8. **The test suite includes attacks.** Hidden instructions, visible instructions, fake badges and claims that point to evidence not on the page are among the cases the graders must pass (§5).
+
+What remains is persuasion: honest-looking prose that leads a reader to a generous view. No filter stops it. The word-for-word check, the second grader, the spot checks and error reports limit it.
 
 ---
 

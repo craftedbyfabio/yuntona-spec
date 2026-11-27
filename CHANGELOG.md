@@ -2,7 +2,97 @@
 
 Each entry corresponds to a git tag. Dates are the date the tag was created.
 
+## Signal register
+
+### Register 2 — 2026-11-27
+
+- **ASI03:2026 does not clear:** credentials issued per runtime, per agent or per API key that are
+  not also bound to a task. *Why:* grading the first tool, the two graders read the existing signal two
+  ways for per-runtime, short-lived tokens. Under §9, rows on ASI03 are graded again.
+
+### Register 1 — 2026-11-26
+
+Released with specification v0.2. One primary signal per entry for all twenty entries.
+
 ## Evidence-Graded Risk Mapping
+
+### v0.3 — 2026-11-27
+
+Version 0.2 had a person review every row, blind to the proposed rung. Grading one tool took
+35 decisions, which does not scale. Version 0.3 lets rules and two independent graders decide, sends
+the hard cases to a person, and measures the graders instead of assuming a person is always right.
+
+**Changed**
+
+- **§5 Review → Grading.** Rows are machine-graded and published without a person unless the two
+  graders disagree, either reaches *tested by vendor* or higher, either marks *aggravates*, or the
+  source tried to steer them. Published rows say *machine-graded* or *reviewed*. *Why:* a person on
+  every row does not scale, and the error rate of the graders can be measured.
+- **Grading regime replaces review question regime.** The models, the grading instructions and the
+  test suite together are versioned and stamped on every row. Regime 3 starts with v0.3.
+- **Quality series** now track grader agreement, person overrides, spot-check agreement and the
+  test-suite record.
+
+**Added**
+
+- **Not covered (vendor states).** A vendor's statement that its tool does not address a risk is
+  recorded as such, without grading. *Why:* v0.2 had no outcome for it; graders were forcing it into
+  Code A, which is for evidence mapped on category alone.
+- **No evidence found.** Every tool is checked against every risk, and a risk with nothing in the
+  sources is recorded as *no evidence found*, with the date and the sources searched. It is never
+  shown as *not covered*. *Why:* silence is not a statement, and recording it makes the pairs the
+  pipeline missed visible to the §6 sample. Code A now applies only where something other than the
+  source proposed the mapping.
+- **§11 Protecting the pipeline.** Controls against prompt injection by vendor pages: graders with
+  no tools or write access, code decides publishing, word-for-word evidence checks, visible text
+  only, flags for text aimed at graders, two model families, vendor text escaped on the site.
+  *Why:* the grader reads text written by the people it grades.
+- **Grader test suite** (`grader-tests.yaml`, suite 1): 54 known-answer cases, 3 of them pages with nothing to find and 7 of them attempts to
+  manipulate the grader. Both graders must pass every case before a regime goes live.
+- **Monthly spot check** of ten machine-graded rows by a person, with the agreement published.
+- **Off by default mark** (§2). A mechanism that does nothing until the deployer sets it up, such
+  as a policy engine that allows everything with no rules or a budget unset until configured, is
+  marked *off by default*. Added only when the evidence states the default. *Why:* grading the first tool
+  showed four rows reading *explained by vendor* for controls that do nothing out of the box, and
+  readers could not tell.
+- **How code-confirmed is awarded** (§2, §5). Both graders must say the cited code shows the
+  mechanism and quote the executable line that does; comments, docstrings, configuration fields and
+  names do not count. Code checks the quoted line is inside a cited code source. Where the graders
+  do not both say so, the mark is left off without sending the row to a person. *Why:* v0.2 defined
+  the mark but nothing in the pipeline awarded it.
+- **Who put the quote under the risk** (§2, §10). A vendor that files another entry's mechanism
+  under a risk has made a claim, recorded as *claimed only*. *Wrong risk entry* and Code A apply
+  only when Yuntona made the mapping: a directory category, a third party, or the pipeline's own
+  matching. A quote beneath the vendor's own heading for a risk counts as the vendor's mapping, and
+  evidence labels now carry that heading. Text that neither names the risk nor sits beneath the vendor's
+  heading for it has been mapped by no one, and is *no evidence found* if nothing else bears on it. *Why:* three of four grader disagreements on the first tool graded came
+  from this one ambiguity.
+- **Marks must match.** Graders must now agree on marks as well as outcome and polarity before a row
+  publishes, because marks are shown to readers.
+
+- **A person's decision stands on regrade** (§5) until the quote, its source or the register entry
+  changes. A new model or new instructions do not replace it. *Why:* on the first tool graded, two graders agreed
+  on the ASI03 grade a person had already rejected, and the regrade would have undone the correction.
+- **Rule 1 clarified.** A vendor that says *not covered*, even with a qualifier, and then lists
+  controls that only limit the damage, is still *not covered (vendor states)*. The listed controls
+  are graded under their own entries.
+
+- **Cross-references are followed** (§5). When a vendor's text for one risk points to another risk
+  entry, code adds the vendor's text for that entry, labelled as referred to from this risk's
+  section, one level only. *Why:* the first tool graded answers four risks partly by pointing
+  to other sections, and the graders split on pointers they could not follow.
+- **When the vendor's sources disagree** (§2), the most recent is graded and the older one is set
+  aside, not quoted or cited. Code decides recency from the dates on the source labels (release
+  date, or the date a page states) and sends the row to a person when it cannot. Only current
+  sources are collected. *Why:* the first tool graded had an older page that contradicted its
+  current documentation.
+- **A replaced decision comes back to a person** when the graders' answer differs from it, so new
+  evidence cannot silently reverse a person's call.
+
+**Removed**
+
+- **Blind human review on every row**, the anchoring measurement and the reviewer self-report field.
+  *Why:* no person reviews most rows; the two graders are kept blind to each other instead.
 
 ### v0.2 — 2026-11-26
 
