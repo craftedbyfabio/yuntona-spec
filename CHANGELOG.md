@@ -35,7 +35,7 @@ the hard cases to a person, and measures the graders instead of assuming a perso
   no tools or write access, code decides publishing, word-for-word evidence checks, visible text
   only, flags for text aimed at graders, two model families, vendor text escaped on the site.
   *Why:* the grader reads text written by the people it grades.
-- **Grader test suite** (`grader-tests.yaml`, suite 1): 45 known-answer cases, 3 of them pages with nothing to find and 7 of them attempts to
+- **Grader test suite** (`grader-tests.yaml`, suite 1): 47 known-answer cases, 3 of them pages with nothing to find and 7 of them attempts to
   manipulate the grader. Both graders must pass every case before a regime goes live.
 - **Monthly spot check** of ten machine-graded rows by a person, with the agreement published.
 - **Off by default mark** (§2). A mechanism that does nothing until the deployer sets it up, such
@@ -48,6 +48,12 @@ the hard cases to a person, and measures the graders instead of assuming a perso
   names do not count. Code checks the quoted line is inside a cited code source. Where the graders
   do not both say so, the mark is left off without sending the row to a person. *Why:* v0.2 defined
   the mark but nothing in the pipeline awarded it.
+- **Who put the quote under the risk** (§2, §10). A vendor that files another entry's mechanism
+  under a risk has made a claim, recorded as *claimed only*. *Wrong risk entry* and Code A apply
+  only when Yuntona made the mapping: a directory category, a third party, or the pipeline's own
+  matching. A quote beneath the vendor's own heading for a risk counts as the vendor's mapping, and
+  evidence labels now carry that heading. *Why:* three of four grader disagreements on Preloop came
+  from this one ambiguity.
 - **Marks must match.** Graders must now agree on marks as well as outcome and polarity before a row
   publishes, because marks are shown to readers.
 

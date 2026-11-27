@@ -13,7 +13,9 @@
 #   expected    outcome: claimed only | explained by vendor | tested by vendor |
 #                        tested independently | not covered (vendor states) |
 #                        no evidence found | Code A | Code B | wrong risk entry
-#   proposed_by when the mapping was proposed by something other than the source
+#   proposed_by when the vendor's own sources did not put the evidence under this risk
+#               (a directory category, a third party, the pipeline's own matching);
+#               only then are wrong risk entry and Code A possible
 #               (a directory listing, a category); this is what makes Code A possible
 #               entry: the correct risk entry, for wrong risk entry only
 #               polarity: mitigates | aggravates
@@ -66,7 +68,7 @@ cases:
 - id: SL-04
   category: shared line only, risk not named
   risk: ASI07:2026
-  proposed_by: the vendor's directory listing places the tool under ASI07
+  proposed_by: a directory category places the tool under ASI07
   evidence: |
     Built on zero-trust principles. All traffic is encrypted with TLS 1.3.
   expected: {outcome: Code A}
@@ -171,18 +173,19 @@ cases:
 # Wrong mechanism, wrong entry (§3 rule 4, §10)
 
 - id: WE-01
-  category: wrong risk entry
+  category: vendor files another entry's mechanism
   risk: ASI01:2026
   evidence: |
     Goal hijack protection: every tool call passes our policy engine, which
     allows, denies or holds it for approval before it runs.
-  expected: {outcome: wrong risk entry, entry: ASI02:2026}
+  expected: {outcome: claimed only, polarity: mitigates}
   why: >-
-    This is the ASI02 mechanism. It limits what a hijacked agent can do but does not check actions against the declared goal.
+    The vendor itself files the ASI02 mechanism under goal hijack. That is a claim about ASI01 that does not clear, not a mapping mistake by Yuntona.
 
 - id: WE-02
   category: wrong risk entry
   risk: ASI06:2026
+  proposed_by: the pipeline matched this page to ASI06:2026
   evidence: |
     Every user prompt is classified for injection before it reaches the model,
     and malicious prompts are blocked.
@@ -219,6 +222,28 @@ cases:
   expected: {outcome: claimed only, polarity: mitigates}
   why: >-
     LLM02 asks for "classifiers, not regex alone"; pattern matching alone does not meet the signal.
+
+- id: WE-06
+  category: wrong risk entry
+  risk: ASI01:2026
+  proposed_by: a directory category places the tool under ASI01
+  evidence: |
+    Every tool call passes our policy engine, which allows, denies or holds it
+    for approval before it runs.
+  expected: {outcome: wrong risk entry, entry: ASI02:2026}
+  why: >-
+    The same mechanism as WE-01, but Yuntona made the mapping and the vendor never names goal hijack, so it is moved to ASI02.
+
+- id: WE-07
+  category: vendor heading
+  risk: ASI05:2026
+  evidence: |
+    [Vendor documentation, https://example.com/acme/docs/owasp, under "ASI05:2026 Unexpected Code Execution"]
+    Shell commands are checked against policy rules on their arguments and
+    denied or held for approval before they run.
+  expected: {outcome: claimed only, polarity: mitigates}
+  why: >-
+    The sentence does not name ASI05, but it sits beneath the vendor's own ASI05 heading, so the vendor made the mapping. Command policy is the ASI02 mechanism, so the claim does not clear.
 
 # Vendor says not covered (§2)
 

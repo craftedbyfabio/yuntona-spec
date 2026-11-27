@@ -115,8 +115,17 @@ The mark is added only when the evidence states the default, in the vendor's tex
 | neither names the risk nor describes the signal | Rejected, Code A (§10) |
 | does not demonstrate what it is quoted for | Rejected, Code B (§10) |
 | — and the risk has no registered primary signal | Capped at Claimed |
+| was placed under this risk by Yuntona, not the vendor, and describes another entry's signal | Wrong risk entry (§10) |
 | states that the tool does not address the risk | Not covered (vendor states) |
 | — and no source names the risk or describes its signal | No evidence found |
+
+### Who put the quote under this risk
+
+A vendor that files a mechanism under a risk has made a claim about that risk, even when the mechanism belongs to another entry. That claim is recorded as Claimed. The vendor's own sources include its documentation, website, repository and code, and a quote counts as filed under a risk when it sits beneath the vendor's own heading for that risk.
+
+When Yuntona made the mapping, the outcome changes. That covers a directory category, the pipeline matching a page to risks, or a third party placing the tool under the risk. A mechanism that belongs to another entry is then Yuntona's mapping mistake, recorded as *wrong risk entry* and moved. One that bears on no entry is Code A (§10). Either way, the vendor has claimed nothing about this risk.
+
+Every tool is checked against every risk entry, so the same quote is also graded under the entry its mechanism belongs to. A vendor that files its tool policy under goal hijack gets Claimed for goal hijack and is graded on tool misuse in the usual way.
 
 ### When the vendor says not covered
 
@@ -410,7 +419,7 @@ Some pairs fail for reasons that say nothing about the evidence. They are routed
 
 | Outcome | Meaning | What happens |
 | --- | --- | --- |
-| Wrong risk entry | The evidence is sound; it demonstrates a different risk, often across a boundary recorded in the register | The pair is re-proposed against the correct entry |
+| Wrong risk entry | Yuntona, not the vendor, put the evidence under this risk (§2), and the evidence demonstrates a different risk, often across a boundary recorded in the register | The pair is re-proposed against the correct entry |
 | Tool out of scope | The tool does not secure AI systems. A judgement about the tool, not this evidence | The tool goes back to triage, and every remaining pair for it is withdrawn |
 
 Counting either as a rejection makes the rejection rate unreadable as a pipeline-failure signal.

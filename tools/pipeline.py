@@ -87,11 +87,13 @@ def as_bool(v):
         if isinstance(v, str) else v
 
 
-def check_answer(ans, evidence):
+def check_answer(ans, evidence, proposed_by=None):
     """Return the problems with one answer; an empty list means it passes."""
     p = []
     if not isinstance(ans, dict) or ans.get("outcome") not in OUTCOMES:
         return ["outcome not allowed"]
+    if ans["outcome"] in ("wrong risk entry", "Code A") and not proposed_by:
+        p.append(f"{ans['outcome']} but the vendor itself mapped the evidence")
     sent = ans.get("supporting_sentence") or ""
     if ans["outcome"] != "no evidence found" and sent and norm(sent) not in norm(evidence):
         p.append("supporting sentence not in evidence")
@@ -153,6 +155,7 @@ def main():
                     out.write(json.dumps({"id": c["id"], "dropped_by_code": True}) + "\n")
                     continue
                 out.write(json.dumps({"id": c["id"], "code_flags": flags, "evidence": text,
+                                      "proposed_by": c.get("proposed_by"),
                                       "input": grader_input(c["risk"], text, c.get("proposed_by"), entries, shared)}) + "\n")
         return
     if cmd == "score":
@@ -169,7 +172,7 @@ def main():
                 continue
             line = []
             for name, ans in (("A", A.setdefault(c["id"], {})), ("B", B.setdefault(c["id"], {}))):
-                ans["_problems"] = check_answer(ans, pr["evidence"])
+                ans["_problems"] = check_answer(ans, pr["evidence"], pr.get("proposed_by"))
                 good = (ans.get("outcome") == exp.get("outcome")
                         and (exp.get("polarity") is None or ans.get("polarity") == exp["polarity"])
                         and (exp.get("entry") is None or ans.get("entry") == exp["entry"])
